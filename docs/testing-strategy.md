@@ -34,7 +34,7 @@ JavaScript, for example:
 
 ```sh
 tsc -p tsconfig.json
-node --test dist/**/*.test.js
+node --test 'dist/**/*.test.js'
 ```
 
 Do not add Vitest for core logic. Use Vitest only if a UI or component harness
