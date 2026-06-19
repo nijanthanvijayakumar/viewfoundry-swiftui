@@ -1,8 +1,8 @@
 # Testing Strategy
 
 ViewFoundry SwiftUI is still a scaffold. Main currently has no `package.json`,
-Swift package, plugin validator, or sandbox project, so these are command
-contracts to activate as each surface lands.
+Swift package, generator, or sandbox project, so these are command contracts to
+activate as each surface lands.
 
 ## Current Checks
 
@@ -13,6 +13,12 @@ git status --short
 test -f README.md
 test -f LICENSE
 test -f docs/testing-strategy.md
+test -f docs/release.md
+test -f .codex-plugin/plugin.json
+test -f skills/viewfoundry/SKILL.md
+test -f skills/viewfoundry/references/architecture.md
+test -f skills/viewfoundry/references/workflow.md
+test -f skills/viewfoundry/assets/swiftui-sandbox-template/ViewFoundrySandboxApp.swift
 ```
 
 The same scaffold checks can run in Docker:
@@ -80,10 +86,26 @@ Expected command contract:
 npm run test:image
 ```
 
+## Plugin And Skill Checks
+
+Validate the Codex plugin manifest and bundled skill when the local validator is
+available:
+
+```sh
+python3 /path/to/plugin-creator/scripts/validate_plugin.py .
+```
+
+If that validator is unavailable or lacks dependencies, manually check that the
+manifest is valid JSON, points at `./skills/`, has no TODO placeholders, and the
+skill has frontmatter with non-empty `name` and `description`.
+
 ## Swift Sandbox Tests
 
-The Swift sandbox does not exist yet. When it lands, keep it in an example or
-sandbox directory and make the test command stable:
+The Swift sandbox project does not exist yet. The current checked-in sandbox
+asset is a template at
+`skills/viewfoundry/assets/swiftui-sandbox-template/ViewFoundrySandboxApp.swift`.
+When a runnable sandbox lands, keep it in an example or sandbox directory and
+make the test command stable:
 
 ```sh
 xcodebuild \

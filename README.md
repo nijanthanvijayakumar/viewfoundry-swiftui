@@ -5,6 +5,8 @@ structured view description could map to SwiftUI.
 
 The repository is currently a scaffold. It has a license and project tracking,
 but no Swift package, app target, generator, or runtime code yet.
+It now includes the base Codex plugin and ViewFoundry skill scaffold that will
+guide sandbox work before codegen lands.
 
 ## V1 Scope
 
@@ -37,6 +39,8 @@ git status --short
 test -f README.md
 test -f LICENSE
 test -f docs/testing-strategy.md
+test -f .codex-plugin/plugin.json
+test -f skills/viewfoundry/SKILL.md
 ```
 
 Testing decisions and staged command contracts live in
@@ -62,7 +66,8 @@ docker run --rm viewfoundry-swiftui-check
 
 Current container behavior:
 
-- Verifies `README.md`, `LICENSE`, and `docs/testing-strategy.md`.
+- Verifies core docs plus the plugin manifest, ViewFoundry skill, references,
+  and SwiftUI sandbox template.
 - If `package.json` exists, installs npm dependencies.
 - Runs `npm run typecheck`, `npm test`, `npm run test:unit`, and
   `npm run test:image` when those scripts exist.
@@ -74,6 +79,8 @@ on a macOS host with Xcode installed when the Swift/iOS targets exist.
 
 - [License](LICENSE)
 - [Testing Strategy](docs/testing-strategy.md)
+- [Plugin Manifest](.codex-plugin/plugin.json)
+- [ViewFoundry Skill](skills/viewfoundry/SKILL.md)
 - [Issues](https://github.com/nijanthanvijayakumar/viewfoundry-swiftui/issues)
 
 Contributing docs are not added yet. Until then, use GitHub issues and small

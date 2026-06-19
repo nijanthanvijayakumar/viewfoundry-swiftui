@@ -5,6 +5,11 @@ test -f README.md
 test -f LICENSE
 test -f docs/testing-strategy.md
 test -f docs/release.md
+test -f .codex-plugin/plugin.json
+test -f skills/viewfoundry/SKILL.md
+test -f skills/viewfoundry/references/architecture.md
+test -f skills/viewfoundry/references/workflow.md
+test -f skills/viewfoundry/assets/swiftui-sandbox-template/ViewFoundrySandboxApp.swift
 
 has_script() {
   node -e 'const pkg = require("./package.json"); process.exit(pkg.scripts && Object.prototype.hasOwnProperty.call(pkg.scripts, process.argv[1]) ? 0 : 1)' "$1"

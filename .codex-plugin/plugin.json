@@ -1,0 +1,32 @@
+{
+  "name": "viewfoundry-swiftui",
+  "version": "0.1.0",
+  "description": "Codex plugin scaffold for ViewFoundry SwiftUI design-to-sandbox workflows.",
+  "author": {
+    "name": "ViewFoundry"
+  },
+  "license": "MIT",
+  "repository": "https://github.com/nijanthanvijayakumar/viewfoundry-swiftui",
+  "homepage": "https://github.com/nijanthanvijayakumar/viewfoundry-swiftui",
+  "keywords": [
+    "swiftui",
+    "codex",
+    "design-to-code"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "ViewFoundry SwiftUI",
+    "shortDescription": "Guide mockup-to-SwiftUI sandbox work.",
+    "longDescription": "ViewFoundry SwiftUI provides a Codex skill scaffold for turning imagegen mockups into reviewed SwiftUI sandbox iterations before TypeScript generation exists.",
+    "developerName": "ViewFoundry",
+    "category": "Developer Tools",
+    "capabilities": [
+      "SwiftUI sandbox planning",
+      "Image mockup review",
+      "Pixel verification guidance"
+    ],
+    "defaultPrompt": [
+      "Use $viewfoundry to plan a SwiftUI sandbox iteration from an image mockup."
+    ]
+  }
+}

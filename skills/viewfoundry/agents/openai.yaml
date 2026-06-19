@@ -1,0 +1,6 @@
+interface:
+  display_name: "ViewFoundry"
+  short_description: "Mockup-to-SwiftUI sandbox workflow"
+  default_prompt: "Use $viewfoundry to plan a SwiftUI sandbox iteration from an image mockup."
+policy:
+  allow_implicit_invocation: true
