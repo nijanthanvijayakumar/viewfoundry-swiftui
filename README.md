@@ -36,11 +36,16 @@ scaffold checks:
 git status --short
 test -f README.md
 test -f LICENSE
+test -f docs/testing-strategy.md
 ```
+
+Testing decisions and staged command contracts live in
+[docs/testing-strategy.md](docs/testing-strategy.md).
 
 ## Project Links
 
 - [License](LICENSE)
+- [Testing Strategy](docs/testing-strategy.md)
 - [Issues](https://github.com/nijanthanvijayakumar/viewfoundry-swiftui/issues)
 
 Contributing docs are not added yet. Until then, use GitHub issues and small
