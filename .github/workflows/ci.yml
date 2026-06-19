@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  scaffold:
+    name: Scaffold checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check required repo files
+        run: |
+          test -f README.md
+          test -f LICENSE
+          test -f .github/pull_request_template.md
+
+      # TODO: Add TypeScript typecheck/tests and npm audit when package.json exists.
+      # TODO: Add Swift package tests when Package.swift exists.
+      # TODO: Add plugin manifest validation when the manifest and validator exist.
