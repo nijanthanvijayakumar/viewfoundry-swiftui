@@ -42,6 +42,26 @@ test -f docs/testing-strategy.md
 Testing decisions and staged command contracts live in
 [docs/testing-strategy.md](docs/testing-strategy.md).
 
+### Docker Checks
+
+Docker covers portable repo checks only. It uses a small Node image so the same
+container can run TypeScript checks after `package.json` and npm scripts exist.
+
+```sh
+docker build -t viewfoundry-swiftui-check .
+docker run --rm viewfoundry-swiftui-check
+```
+
+Current container behavior:
+
+- Verifies `README.md`, `LICENSE`, and `docs/testing-strategy.md`.
+- If `package.json` exists, installs npm dependencies.
+- Runs `npm run typecheck`, `npm test`, `npm run test:unit`, and
+  `npm run test:image` when those scripts exist.
+
+Docker does not run Xcode, SwiftUI sandbox, or iOS Simulator checks. Run those
+on a macOS host with Xcode installed when the Swift/iOS targets exist.
+
 ## Project Links
 
 - [License](LICENSE)

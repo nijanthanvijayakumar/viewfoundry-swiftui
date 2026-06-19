@@ -15,6 +15,17 @@ test -f LICENSE
 test -f docs/testing-strategy.md
 ```
 
+The same scaffold checks can run in Docker:
+
+```sh
+docker build -t viewfoundry-swiftui-check .
+docker run --rm viewfoundry-swiftui-check
+```
+
+Docker is limited to portable checks. It can run npm-based TypeScript checks
+once `package.json` exists, but it cannot run Xcode, SwiftUI sandbox, or iOS
+Simulator checks.
+
 ## TypeScript Unit Tests
 
 Use Node's built-in test runner for core TypeScript logic.
