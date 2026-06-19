@@ -25,6 +25,8 @@
       "Image mockup review",
       "Pixel verification guidance"
     ],
-    "defaultPrompt": "Use $viewfoundry to plan a SwiftUI sandbox iteration from an image mockup."
+    "defaultPrompt": [
+      "Use $viewfoundry to plan a SwiftUI sandbox iteration from an image mockup."
+    ]
   }
 }
