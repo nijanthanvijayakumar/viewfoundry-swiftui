@@ -20,6 +20,9 @@ ViewFoundry SwiftUI is plugin-first. The plugin and skill define the operating c
   TypeScript runner exists.
 - Keep the TypeScript runtime in `packages/runtime` minimal until generation
   and simulator issues are in scope.
+- The mocked pipeline may orchestrate stubs, artifacts, and optional diffing,
+  but real imagegen and production SwiftUI generation remain explicit future
+  work.
 
 ## Out Of Scope Until Explicit
 

@@ -186,6 +186,13 @@ final report:
 - `swiftuiEntryFile` when SwiftUI generation produced an entry file; passed
   reports must include it
 - `diffReportPath` when the primary diff ran; passed reports must include it
+- `steps` when an orchestrated pipeline ran; each item includes `step`,
+  `status`, and optional `artifactPath` or `reason`
+- `requestPath` when the request was persisted
+- `designBriefPath` when a design brief was written
+- `mockupPath` when a mockup artifact was written
+- `targetImagePath` when a target mockup image was written
+- `generationReportPath` when SwiftUI generation metadata was written
 - `errors`
 - `nextActions`
 

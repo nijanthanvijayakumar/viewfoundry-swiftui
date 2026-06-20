@@ -7,7 +7,8 @@
   "bin": {
     "viewfoundry": "./dist/src/cli.js",
     "viewfoundry-diff": "./dist/src/diff-cli.js",
-    "viewfoundry-mockup": "./dist/src/mockup-cli.js"
+    "viewfoundry-mockup": "./dist/src/mockup-cli.js",
+    "viewfoundry-pipeline": "./dist/src/pipeline-cli.js"
   },
   "exports": {
     ".": "./dist/src/index.js"

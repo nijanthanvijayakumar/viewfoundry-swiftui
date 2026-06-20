@@ -4,6 +4,8 @@ export { parseRuntimeRequest, RuntimeRequestError } from "./validation.js";
 export { comparePngImages, VisualDiffError } from "./visual-diff.js";
 export type { VisualDiffOptions } from "./visual-diff.js";
 export { createDesignBrief, createMockupStub, createMockupStubFromFile } from "./mockup.js";
+export { runMockPipeline, runMockPipelineFromFile } from "./pipeline.js";
+export type { MockPipelineOptions, MockPipelineReport, PipelineStepReport } from "./pipeline.js";
 export type {
   ArtifactPaths
 } from "./artifacts.js";

@@ -289,6 +289,27 @@
         }
       }
     },
+    "PipelineStepReport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["step", "status"],
+      "properties": {
+        "step": {
+          "type": "string",
+          "enum": ["request", "imagegen", "generation", "build", "screenshot", "diff", "report"]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["completed", "skipped", "failed"]
+        },
+        "artifactPath": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        }
+      }
+    },
     "IterationState": {
       "type": "object",
       "additionalProperties": false,
@@ -436,6 +457,27 @@
           "type": "string"
         },
         "diffReportPath": {
+          "type": "string"
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PipelineStepReport"
+          }
+        },
+        "requestPath": {
+          "type": "string"
+        },
+        "designBriefPath": {
+          "type": "string"
+        },
+        "mockupPath": {
+          "type": "string"
+        },
+        "targetImagePath": {
+          "type": "string"
+        },
+        "generationReportPath": {
           "type": "string"
         },
         "errors": {
