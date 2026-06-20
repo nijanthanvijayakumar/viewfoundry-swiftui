@@ -15,6 +15,7 @@ npm run typecheck
 npm run build
 npm test
 npm run mockup:stub -- --input examples/runtime-request.sample.json --output .viewfoundry/runs/sample
+npm run pipeline:mock -- --input examples/runtime-request.sample.json --output .viewfoundry/runs/sample
 npm run diff:image -- --target <target.png> --actual <actual.png> --diff <diff.png> --report <report.json>
 npm run sandbox:build
 npm run sandbox:screenshot
@@ -56,9 +57,12 @@ test -f packages/runtime/tsconfig.json
 test -f packages/runtime/src/index.ts
 test -f packages/runtime/src/mockup.ts
 test -f packages/runtime/src/mockup-cli.ts
+test -f packages/runtime/src/pipeline.ts
+test -f packages/runtime/src/pipeline-cli.ts
 test -f packages/runtime/src/visual-diff.ts
 test -f packages/runtime/src/diff-cli.ts
 test -f packages/runtime/tests/unit/mockup.test.ts
+test -f packages/runtime/tests/unit/pipeline.test.ts
 test -f packages/runtime/tests/unit/visual-diff.test.ts
 test -f examples/mockups/mockup.sample.json
 grep -q "one issue at a time" AGENTS.md
@@ -146,6 +150,35 @@ behavior.
 
 Real imagegen provider wiring is future work. CI must keep using the stub so
 tests never require provider secrets.
+
+## Mocked End-To-End Pipeline Tests
+
+Use the mocked pipeline for the first prompt-to-report path. It validates the
+request, writes a design brief, writes mockup artifacts, writes placeholder
+SwiftUI into the sandbox generated view, skips simulator-only steps in CI, and
+writes a final report with completed/skipped steps.
+
+Current command:
+
+```sh
+npm run pipeline:mock -- \
+  --input examples/runtime-request.sample.json \
+  --output .viewfoundry/runs/sample
+```
+
+Optional diff path:
+
+```sh
+npm run pipeline:mock -- \
+  --input examples/runtime-request.sample.json \
+  --output .viewfoundry/runs/sample \
+  --actual .viewfoundry/runs/sample/screenshots/primary.png
+```
+
+Current coverage lives in `packages/runtime/tests/unit/pipeline.test.ts` and
+covers the no-simulator path, optional diff path, CLI artifact writing, and a
+diff failure path. Real imagegen, production SwiftUI generation, and simulator
+capture remain separate future stages.
 
 ## Image Diff Tests
 

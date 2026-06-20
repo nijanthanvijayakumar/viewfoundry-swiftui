@@ -52,6 +52,16 @@ Do not start the next issue while the current PR is unmerged.
 10. Run extra-device smoke checks only after the primary target is stable.
 11. Record artifact paths and final status in the run report.
 
+Current mocked command:
+
+```sh
+npm run pipeline:mock -- --input examples/runtime-request.sample.json --output .viewfoundry/runs/sample
+```
+
+It uses the local mockup stub, writes placeholder SwiftUI into the generated
+sandbox view, skips simulator-only steps unless later commands provide those
+artifacts, and records completed/skipped steps in `final-report.json`.
+
 ## Verification Notes
 
 - Prefer simulator screenshots over source inspection for visual acceptance.

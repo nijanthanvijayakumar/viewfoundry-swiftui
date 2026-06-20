@@ -8,10 +8,18 @@ struct ViewFoundryGeneratedView: View {
 
             VStack(alignment: .leading, spacing: 16) {
                 Text("ViewFoundry Sandbox")
+                    .font(.caption.bold())
+                    .foregroundStyle(.secondary)
+
+                Text("Build a compact onboarding screen for a habit tracker.")
                     .font(.title.bold())
 
-                Text("Replace this generated view with the current mockup target. Keep values explicit so screenshot review can compare spacing, typography, and color.")
-                    .font(.body)
+                Text("Mocked ViewFoundry pipeline output")
+                    .font(.headline)
+                    .foregroundStyle(.secondary)
+
+                Text("iPhone 16 / iOS 18 / light")
+                    .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
             .padding(24)

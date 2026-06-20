@@ -46,6 +46,7 @@ npm run typecheck
 npm run build
 npm test
 npm run mockup:stub -- --input examples/runtime-request.sample.json --output .viewfoundry/runs/sample
+npm run pipeline:mock -- --input examples/runtime-request.sample.json --output .viewfoundry/runs/sample
 npm run diff:image -- --target <target.png> --actual <actual.png> --diff <diff.png> --report <report.json>
 npm run sandbox:build
 npm run sandbox:screenshot
@@ -193,6 +194,27 @@ The stub records the future imagegen request contract and writes a deterministic
 placeholder PNG. It does not require API keys and does not call a real image
 generation provider.
 
+Run the first no-network mocked pipeline:
+
+```sh
+npm run pipeline:mock -- \
+  --input examples/runtime-request.sample.json \
+  --output .viewfoundry/runs/sample
+```
+
+Artifacts:
+
+- `.viewfoundry/runs/<run>/request.json`
+- `.viewfoundry/runs/<run>/design-brief.json`
+- `.viewfoundry/runs/<run>/mockups/target.png`
+- `.viewfoundry/runs/<run>/swiftui/Sources/ViewFoundryGeneratedView.swift`
+- `.viewfoundry/runs/<run>/swiftui/generation-report.json`
+- `.viewfoundry/runs/<run>/final-report.json`
+
+The mocked pipeline writes deterministic placeholder SwiftUI into the sandbox
+generated view, skips simulator-only steps in CI, and records completed/skipped
+steps with reasons in the final report.
+
 Compare a mockup PNG to a captured screenshot PNG:
 
 ```sh
@@ -211,8 +233,9 @@ PNG, and does not claim semantic or perceptual matching.
 ## Runtime Placeholder
 
 The runtime package lives at `packages/runtime`. It validates requests, writes
-deterministic mockup stub artifacts, and exposes local helper CLIs. It does not
-call real imagegen providers or generate SwiftUI yet.
+deterministic mockup stub artifacts, writes mocked SwiftUI pipeline output, and
+exposes local helper CLIs. It does not call real imagegen providers or generate
+production SwiftUI yet.
 
 ```sh
 npm run build
