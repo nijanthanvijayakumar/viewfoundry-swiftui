@@ -47,6 +47,18 @@ export interface DesignBrief {
   outOfScope: string[];
 }
 
+export interface ImagegenRequest {
+  provider: "stub" | "imagegen";
+  prompt: string;
+  targetPlatform: TargetPlatform;
+  primaryDevice: DeviceTarget;
+  visualConstraints?: VisualConstraints;
+  outputPath: string;
+  width: number;
+  height: number;
+  seed: string;
+}
+
 export interface MockupArtifact {
   kind: "imagegen" | "provided";
   prompt: string;

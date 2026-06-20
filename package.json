@@ -10,6 +10,7 @@
     "build": "npm run build --workspace @viewfoundry/runtime",
     "check": "npm run typecheck && npm run build && npm test && npm run sandbox:build",
     "diff:image": "npm run build --workspace @viewfoundry/runtime && node packages/runtime/dist/src/diff-cli.js",
+    "mockup:stub": "npm run build --workspace @viewfoundry/runtime && node packages/runtime/dist/src/mockup-cli.js",
     "sandbox:build": "sh scripts/build-sandbox.sh",
     "sandbox:screenshot": "sh scripts/capture-sandbox-screenshot.sh",
     "secrets": "sh scripts/gitleaks-check.sh",

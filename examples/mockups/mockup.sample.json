@@ -1,0 +1,11 @@
+{
+  "kind": "imagegen",
+  "prompt": "Create an iOS SwiftUI mockup for: Build a compact onboarding screen for a habit tracker.\nPrimary device: iPhone 16, iOS 18.\nStyle: plain SwiftUI, large tap targets.\nLayout: single screen, no scrolling.\nAccessibility: Dynamic Type friendly.",
+  "imagePath": ".viewfoundry/runs/run-sample/mockups/target.png",
+  "width": 390,
+  "height": 844,
+  "notes": [
+    "Deterministic local stub; no image generation provider was called.",
+    "Replace this artifact with a provider image when imagegen integration is implemented."
+  ]
+}

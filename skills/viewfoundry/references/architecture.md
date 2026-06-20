@@ -9,6 +9,8 @@ ViewFoundry SwiftUI is plugin-first. The plugin and skill define the operating c
 - Start from an imagegen mockup or provided screenshot.
 - Normalize prompt, target platform, primary device, smoke devices, and visual
   constraints through `docs/runtime-contract.md`.
+- Use the deterministic mockup stub for CI-safe imagegen contract coverage until
+  a real provider issue is explicitly in scope.
 - Build an inspectable SwiftUI sandbox view.
 - Run one primary simulator/device target for pixel verification.
 - Use extra-device checks as smoke tests, not a perfection promise.
@@ -21,6 +23,7 @@ ViewFoundry SwiftUI is plugin-first. The plugin and skill define the operating c
 
 ## Out Of Scope Until Explicit
 
+- Real imagegen provider calls.
 - TypeScript-to-SwiftUI generation beyond placeholder output.
 - Broad Swift package or app runtime surface.
 - Design-tool plugins.

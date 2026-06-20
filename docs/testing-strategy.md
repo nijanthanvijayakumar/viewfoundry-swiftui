@@ -1,8 +1,9 @@
 # Testing Strategy
 
 ViewFoundry SwiftUI is still scaffold-first. Main now has a minimal TypeScript
-runtime package and a buildable SwiftUI sandbox project, but no generator or
-simulator automation.
+runtime package, a buildable SwiftUI sandbox project, local screenshot and
+visual diff prototypes, and a deterministic mockup stub, but no SwiftUI
+generator.
 
 ## Current Checks
 
@@ -13,6 +14,7 @@ npm install
 npm run typecheck
 npm run build
 npm test
+npm run mockup:stub -- --input examples/runtime-request.sample.json --output .viewfoundry/runs/sample
 npm run diff:image -- --target <target.png> --actual <actual.png> --diff <diff.png> --report <report.json>
 npm run sandbox:build
 npm run sandbox:screenshot
@@ -52,9 +54,13 @@ test -f scripts/capture-sandbox-screenshot.sh
 test -f packages/runtime/package.json
 test -f packages/runtime/tsconfig.json
 test -f packages/runtime/src/index.ts
+test -f packages/runtime/src/mockup.ts
+test -f packages/runtime/src/mockup-cli.ts
 test -f packages/runtime/src/visual-diff.ts
 test -f packages/runtime/src/diff-cli.ts
+test -f packages/runtime/tests/unit/mockup.test.ts
 test -f packages/runtime/tests/unit/visual-diff.test.ts
+test -f examples/mockups/mockup.sample.json
 grep -q "one issue at a time" AGENTS.md
 grep -q "@Codex" AGENTS.md
 grep -q "co-author or generated-by" AGENTS.md
@@ -119,6 +125,27 @@ node --test 'dist/**/*.test.js'
 Do not add Vitest for core logic. Use Vitest only if a UI or component harness
 needs browser-like lifecycle, DOM assertions, or module mocking that Node's
 runner cannot cover cleanly.
+
+## Mockup Stub Tests
+
+Use the runtime mockup stub for deterministic imagegen contract coverage. The
+stub writes a design brief, imagegen request metadata, mockup artifact JSON, and
+a placeholder PNG without credentials or provider calls.
+
+Current command:
+
+```sh
+npm run mockup:stub -- \
+  --input examples/runtime-request.sample.json \
+  --output .viewfoundry/runs/sample
+```
+
+Current coverage lives in `packages/runtime/tests/unit/mockup.test.ts` and
+covers artifact writing, deterministic output, dimension validation, and CLI
+behavior.
+
+Real imagegen provider wiring is future work. CI must keep using the stub so
+tests never require provider secrets.
 
 ## Image Diff Tests
 

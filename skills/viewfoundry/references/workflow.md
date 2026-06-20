@@ -35,27 +35,30 @@ Do not start the next issue while the current PR is unmerged.
 ## Mockup To Sandbox Loop
 
 1. Create a runtime request matching `docs/runtime-contract.md`.
-2. Capture or generate the visual target.
-3. Identify the primary device target and appearance.
-4. Create or update a SwiftUI sandbox view from `assets/swiftui-sandbox-template/`.
+2. Create a design brief and imagegen request metadata with `npm run mockup:stub`.
+3. Use the deterministic stub PNG until a real imagegen provider is in scope.
+4. Identify the primary device target and appearance.
+5. Create or update a SwiftUI sandbox view from `assets/swiftui-sandbox-template/`.
    Generated SwiftUI lands in
    `examples/Sandbox/ViewFoundrySandbox/Generated/ViewFoundryGeneratedView.swift`;
    keep the app shell stable.
-5. Run the sandbox on the primary simulator/device with `npm run sandbox:build`
+6. Run the sandbox on the primary simulator/device with `npm run sandbox:build`
    or a concrete `VIEWFOUNDRY_SANDBOX_DESTINATION`.
-6. Capture a screenshot.
-7. Run `npm run diff:image` against the target mockup PNG and primary
+7. Capture a screenshot.
+8. Run `npm run diff:image` against the target mockup PNG and primary
    screenshot PNG to produce `diffs/primary-report.json` and
    `diffs/primary-diff.png`.
-8. Iterate until the primary target is close enough for review.
-9. Run extra-device smoke checks only after the primary target is stable.
-10. Record artifact paths and final status in the run report.
+9. Iterate until the primary target is close enough for review.
+10. Run extra-device smoke checks only after the primary target is stable.
+11. Record artifact paths and final status in the run report.
 
 ## Verification Notes
 
 - Prefer simulator screenshots over source inspection for visual acceptance.
 - Record primary device, OS/runtime, appearance, and screenshot path in PR notes.
 - Store run artifacts under `.viewfoundry/runs/<run-id>/` when the runner exists.
+- Keep real imagegen provider credentials out of CI; use the deterministic
+  mockup stub for contract and unit tests.
 - Keep expected/actual/diff image updates explicit when image fixtures exist.
 - Treat the current PNG diff score as a deterministic prototype only; it is not
   semantic or perceptual visual matching.

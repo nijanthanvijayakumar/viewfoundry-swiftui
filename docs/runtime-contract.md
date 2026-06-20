@@ -118,6 +118,22 @@ Optional fields:
 - `height`
 - `notes`
 
+`mockups/imagegen-request.json` records the provider boundary before real image
+generation exists:
+
+- `provider`: `stub` or `imagegen`
+- `prompt`
+- `targetPlatform`
+- `primaryDevice`
+- `visualConstraints`
+- `outputPath`
+- `width`
+- `height`
+- `seed`
+
+The local stub writes this metadata plus a deterministic placeholder PNG. It
+must not require API keys or call a real image generation provider.
+
 `swiftui/generation-report.json` records generated output:
 
 - `entryFile`

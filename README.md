@@ -10,8 +10,9 @@ skill scaffold that will guide sandbox work before codegen lands.
 The future runner contract is documented in
 [docs/runtime-contract.md](docs/runtime-contract.md). The current runtime is a
 placeholder only; it validates requests and prints deterministic blocked output.
-The SwiftUI sandbox project is buildable now, but generation and simulator
-automation are still future work.
+The SwiftUI sandbox project is buildable now, and local screenshot, mockup
+stub, and visual diff prototypes exist. SwiftUI generation and real imagegen
+provider wiring are still future work.
 
 ## V1 Scope
 
@@ -44,6 +45,7 @@ Run the TypeScript and scaffold checks:
 npm run typecheck
 npm run build
 npm test
+npm run mockup:stub -- --input examples/runtime-request.sample.json --output .viewfoundry/runs/sample
 npm run diff:image -- --target <target.png> --actual <actual.png> --diff <diff.png> --report <report.json>
 npm run sandbox:build
 npm run sandbox:screenshot
@@ -172,6 +174,25 @@ Artifacts:
 - `.viewfoundry/runs/<run>/screenshot-runner.json`
 - `.viewfoundry/runs/<run>/final-report.json`
 
+Create deterministic mockup artifacts without calling an image provider:
+
+```sh
+npm run mockup:stub -- \
+  --input examples/runtime-request.sample.json \
+  --output .viewfoundry/runs/sample
+```
+
+Artifacts:
+
+- `.viewfoundry/runs/<run>/design-brief.json`
+- `.viewfoundry/runs/<run>/mockups/imagegen-request.json`
+- `.viewfoundry/runs/<run>/mockups/mockup.json`
+- `.viewfoundry/runs/<run>/mockups/target.png`
+
+The stub records the future imagegen request contract and writes a deterministic
+placeholder PNG. It does not require API keys and does not call a real image
+generation provider.
+
 Compare a mockup PNG to a captured screenshot PNG:
 
 ```sh
@@ -189,8 +210,9 @@ PNG, and does not claim semantic or perceptual matching.
 
 ## Runtime Placeholder
 
-The runtime package lives at `packages/runtime`. It does not call imagegen,
-generate SwiftUI, or run simulators yet.
+The runtime package lives at `packages/runtime`. It validates requests, writes
+deterministic mockup stub artifacts, and exposes local helper CLIs. It does not
+call real imagegen providers or generate SwiftUI yet.
 
 ```sh
 npm run build
