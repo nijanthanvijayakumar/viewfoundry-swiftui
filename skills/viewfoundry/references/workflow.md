@@ -44,4 +44,4 @@ Do not start the next issue while the current PR is unmerged.
 
 ## Future Generator Boundary
 
-When TypeScript work starts, keep parser/model/generator tests separate from screenshot verification. A passing generator unit test is not a visual acceptance result.
+Keep runtime parser/model/generator tests separate from screenshot verification. A passing TypeScript unit test is not a visual acceptance result.

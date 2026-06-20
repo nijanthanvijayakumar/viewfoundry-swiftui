@@ -2,7 +2,7 @@
 
 ## Direction
 
-ViewFoundry SwiftUI is plugin-first. The plugin and skill define the operating contract before codegen exists. TypeScript model and generator work comes later, after the workflow, sandbox, and verification loop are explicit.
+ViewFoundry SwiftUI is plugin-first. The plugin and skill define the operating contract before codegen exists. The TypeScript runtime package is the orchestration shell for that contract; generator work comes later, after the workflow, sandbox, and verification loop are explicit.
 
 ## V1 Contract
 
@@ -16,10 +16,12 @@ ViewFoundry SwiftUI is plugin-first. The plugin and skill define the operating c
 - Write local run artifacts under `.viewfoundry/runs/<run-id>/`.
 - Keep schema stubs in `schemas/runtime-contract.schema.json` until the
   TypeScript runner exists.
+- Keep the TypeScript runtime in `packages/runtime` minimal until generation
+  and simulator issues are in scope.
 
 ## Out Of Scope Until Explicit
 
-- TypeScript-to-SwiftUI generation.
+- TypeScript-to-SwiftUI generation beyond placeholder output.
 - Broad Swift package or app runtime surface.
 - Design-tool plugins.
 - All-device pixel-perfect claims.
