@@ -2,7 +2,7 @@
 set -eu
 
 if command -v gitleaks >/dev/null 2>&1; then
-  gitleaks detect --source . --config .gitleaks.toml --redact --verbose
+  gitleaks git . --config .gitleaks.toml --log-opts=--all --redact --verbose
   gitleaks dir . --config .gitleaks.toml --redact --verbose
   exit 0
 fi

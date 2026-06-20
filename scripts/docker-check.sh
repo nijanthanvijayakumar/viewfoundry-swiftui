@@ -16,6 +16,7 @@ test -f schemas/runtime-contract.schema.json
 test -f skills/viewfoundry/SKILL.md
 test -f skills/viewfoundry/references/architecture.md
 test -f skills/viewfoundry/references/workflow.md
+test -f skills/viewfoundry/references/review-learnings.md
 test -f skills/viewfoundry/assets/swiftui-sandbox-template/ViewFoundrySandboxApp.swift
 test -f examples/Sandbox/ViewFoundrySandbox.xcodeproj/project.pbxproj
 test -f examples/Sandbox/ViewFoundrySandbox.xcodeproj/xcshareddata/xcschemes/ViewFoundrySandbox.xcscheme
@@ -52,6 +53,8 @@ grep -q "private vulnerability" SECURITY.md
 grep -q "squash merges" GOVERNANCE.md
 grep -q "Create a repo skill" skills/viewfoundry/references/workflow.md
 grep -q "Update the skill" skills/viewfoundry/references/workflow.md
+grep -q "Review Handling" skills/viewfoundry/references/review-learnings.md
+grep -q "VIEWFOUNDRY_BUILD_CONFIGURATION" skills/viewfoundry/references/review-learnings.md
 grep -q "ViewFoundryGeneratedView" examples/Sandbox/ViewFoundrySandbox/ViewFoundrySandboxApp.swift
 grep -q "ViewFoundry Sandbox" examples/Sandbox/ViewFoundrySandbox/Generated/ViewFoundryGeneratedView.swift
 grep -q "Summary (Why these changes are required)?" .github/pull_request_template.md

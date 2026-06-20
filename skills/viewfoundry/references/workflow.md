@@ -7,12 +7,18 @@
 3. Run relevant local checks and Docker checks when available.
 4. Open a PR with summary, change checklist, and testing details.
 5. Ask `@Codex` for review and wait.
-6. Fix all actionable feedback, then rerun checks.
-7. Run Gitleaks against local history/current tree and remote PR state.
-8. If a secret reaches remote Git, stop and remove it from branch history before merge.
-9. Squash merge only after clean review, checks, and secret scan.
-10. Verify the issue closed; if not, add the PR link and close it.
-11. Delete the branch and clean/archive the child worktree.
+6. Treat an eyes reaction as acknowledgement only, not a review.
+7. Verify feedback against the latest PR head before changing code.
+8. Fix all valid actionable feedback, then rerun checks.
+9. Re-request `@Codex` review once after fixes.
+10. Resolve addressed review threads; minimize stale/outdated review threads
+    when they obscure current state.
+11. Run Gitleaks against local history/current tree and remote PR state.
+12. Inspect the GitHub PR diff for secret-like additions before merge.
+13. If a secret reaches remote Git, stop and remove it from branch history before merge.
+14. Squash merge only after latest-head clean review, checks, and secret scan.
+15. Verify the issue closed; if not, add the PR link and close it.
+16. Delete the branch and clean/archive the child worktree.
 
 Do not start the next issue while the current PR is unmerged.
 
@@ -20,9 +26,13 @@ Do not start the next issue while the current PR is unmerged.
 
 - Use `npm run secrets` for local Gitleaks checks.
 - Use `pre-commit install` to enable the local Gitleaks hook when pre-commit is available.
-- Use `gitleaks detect --source . --config .gitleaks.toml --log-opts=--all --redact --verbose` after fetching remote refs.
-- Inspect PR diff state before merge; a clean Gitleaks scan means no history rewrite is needed.
+- Use `gitleaks git . --config .gitleaks.toml --log-opts=--all --redact --verbose` after fetching remote refs.
+- Use `gitleaks dir . --config .gitleaks.toml --redact --verbose` for the current tree.
+- Inspect PR diff state before merge, for example with
+  `gh pr diff <number> | gitleaks stdin --config .gitleaks.toml --redact --verbose`.
+  A clean Gitleaks scan means no history rewrite is needed.
 - Never run `gh auth refresh` unless the user explicitly asks in the current turn.
+- If GitHub auth lacks a required scope, report the missing scope and stop.
 - If a child thread is still editing or polling, stop it before orchestrator edits the same worktree.
 
 ## Skill Updates
@@ -73,6 +83,12 @@ artifacts, and records completed/skipped steps in `final-report.json`.
 - Treat the current PNG diff score as a deterministic prototype only; it is not
   semantic or perceptual visual matching.
 - Treat Docker checks as portable scaffold checks only; Docker cannot verify SwiftUI simulator output.
+- Run `npm run check` and `sh scripts/docker-check.sh` serially. The Docker
+  check may run `npm ci`; running it in parallel with TypeScript checks can
+  remove `node_modules/.bin/tsc` mid-run and create false failures.
+- If Docker Hub metadata times out before repo checks run, record it as an
+  external Docker registry blocker and keep local `scripts/docker-check.sh`
+  evidence separate.
 
 ## Future Generator Boundary
 
