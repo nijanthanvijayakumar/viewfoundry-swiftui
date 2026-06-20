@@ -335,7 +335,7 @@
             "required": ["passed"]
           },
           "then": {
-            "required": ["screenshotPath"]
+            "required": ["screenshot"]
           }
         },
         {
@@ -359,8 +359,9 @@
         "passed": {
           "type": "boolean"
         },
-        "screenshotPath": {
-          "type": "string"
+        "screenshot": {
+          "description": "Passed smoke screenshot metadata: device.name, device.os, device.appearance, path, and capturedAt.",
+          "$ref": "#/$defs/SimulatorScreenshotArtifact"
         },
         "failureArtifactPath": {
           "type": "string"
