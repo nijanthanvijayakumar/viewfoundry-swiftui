@@ -7,10 +7,15 @@ ViewFoundry SwiftUI is plugin-first. The plugin and skill define the operating c
 ## V1 Contract
 
 - Start from an imagegen mockup or provided screenshot.
+- Normalize prompt, target platform, primary device, smoke devices, and visual
+  constraints through `docs/runtime-contract.md`.
 - Build an inspectable SwiftUI sandbox view.
 - Run one primary simulator/device target for pixel verification.
 - Use extra-device checks as smoke tests, not a perfection promise.
 - Keep the SwiftUI output plain, reviewable, and free of hidden runtime behavior.
+- Write local run artifacts under `.viewfoundry/runs/<run-id>/`.
+- Keep schema stubs in `schemas/runtime-contract.schema.json` until the
+  TypeScript runner exists.
 
 ## Out Of Scope Until Explicit
 

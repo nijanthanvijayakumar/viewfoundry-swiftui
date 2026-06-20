@@ -15,8 +15,10 @@ test -f LICENSE
 test -f AGENTS.md
 test -f .github/pull_request_template.md
 test -f docs/testing-strategy.md
+test -f docs/runtime-contract.md
 test -f docs/release.md
 test -f .codex-plugin/plugin.json
+test -f schemas/runtime-contract.schema.json
 test -f skills/viewfoundry/SKILL.md
 test -f skills/viewfoundry/references/architecture.md
 test -f skills/viewfoundry/references/workflow.md
@@ -29,6 +31,7 @@ grep -q "Update the skill" skills/viewfoundry/references/workflow.md
 grep -q "Summary (Why these changes are required)?" .github/pull_request_template.md
 grep -q "What changes are in this PR" .github/pull_request_template.md
 grep -q "Testing details" .github/pull_request_template.md
+node -e 'for (const file of [".codex-plugin/plugin.json", "schemas/runtime-contract.schema.json"]) JSON.parse(require("fs").readFileSync(file, "utf8"))'
 ```
 
 The same scaffold checks can run in Docker:
@@ -108,6 +111,13 @@ python3 /path/to/plugin-creator/scripts/validate_plugin.py .
 If that validator is unavailable or lacks dependencies, manually check that the
 manifest is valid JSON, points at `./skills/`, has no TODO placeholders, and the
 skill has frontmatter with non-empty `name` and `description`.
+
+Validate runtime schema stubs with Node JSON parsing until a schema validator is
+added:
+
+```sh
+node -e 'JSON.parse(require("fs").readFileSync("schemas/runtime-contract.schema.json", "utf8"))'
+```
 
 ## Swift Sandbox Tests
 

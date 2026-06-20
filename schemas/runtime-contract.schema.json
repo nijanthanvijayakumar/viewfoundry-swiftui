@@ -1,0 +1,368 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/nijanthanvijayakumar/viewfoundry-swiftui/schemas/runtime-contract.schema.json",
+  "title": "ViewFoundry Runtime Request",
+  "description": "Schema stub for the future ViewFoundry SwiftUI runner request. Artifact shapes live in $defs until the runner exists.",
+  "$ref": "#/$defs/RuntimeRequest",
+  "$defs": {
+    "DeviceTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "os": {
+          "type": "string",
+          "minLength": 1
+        },
+        "appearance": {
+          "type": "string",
+          "enum": ["light", "dark", "unspecified"]
+        }
+      }
+    },
+    "VisualConstraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "style": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "layout": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "accessibility": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "avoid": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "RuntimeRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["prompt", "targetPlatform", "primaryDevice"],
+      "properties": {
+        "prompt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "targetPlatform": {
+          "type": "string",
+          "enum": ["ios"]
+        },
+        "primaryDevice": {
+          "$ref": "#/$defs/DeviceTarget"
+        },
+        "smokeDevices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/DeviceTarget"
+          }
+        },
+        "visualConstraints": {
+          "$ref": "#/$defs/VisualConstraints"
+        }
+      }
+    },
+    "DesignBrief": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["summary", "targetPlatform", "primaryDevice", "acceptanceCriteria", "outOfScope"],
+      "properties": {
+        "summary": {
+          "type": "string"
+        },
+        "targetPlatform": {
+          "type": "string",
+          "enum": ["ios"]
+        },
+        "primaryDevice": {
+          "$ref": "#/$defs/DeviceTarget"
+        },
+        "smokeDevices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/DeviceTarget"
+          }
+        },
+        "visualConstraints": {
+          "$ref": "#/$defs/VisualConstraints"
+        },
+        "acceptanceCriteria": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "outOfScope": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "MockupArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "prompt", "imagePath"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["imagegen", "provided"]
+        },
+        "prompt": {
+          "type": "string"
+        },
+        "imagePath": {
+          "type": "string"
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "FileArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path"],
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        }
+      }
+    },
+    "SwiftUIGenerationOutput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["entryFile", "sourceFiles", "assetFiles"],
+      "properties": {
+        "entryFile": {
+          "type": "string"
+        },
+        "sourceFiles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/FileArtifact"
+          }
+        },
+        "assetFiles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/FileArtifact"
+          }
+        },
+        "unsupportedRequestParts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "assumptions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "SimulatorScreenshotArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["device", "path"],
+      "properties": {
+        "device": {
+          "$ref": "#/$defs/DeviceTarget"
+        },
+        "path": {
+          "type": "string"
+        },
+        "capturedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "VisualDiffReport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["targetPath", "actualPath", "diffPath", "score", "threshold", "passed"],
+      "properties": {
+        "targetPath": {
+          "type": "string"
+        },
+        "actualPath": {
+          "type": "string"
+        },
+        "diffPath": {
+          "type": "string"
+        },
+        "score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "threshold": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "passed": {
+          "type": "boolean"
+        },
+        "observations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "RuntimeError": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["step", "message", "retryable"],
+      "properties": {
+        "step": {
+          "type": "string",
+          "enum": ["request", "imagegen", "generation", "build", "screenshot", "diff", "report"]
+        },
+        "message": {
+          "type": "string"
+        },
+        "retryable": {
+          "type": "boolean"
+        }
+      }
+    },
+    "IterationState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["runId", "attempt", "maxAttempts", "status"],
+      "properties": {
+        "runId": {
+          "type": "string"
+        },
+        "attempt": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "maxAttempts": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": ["running", "passed", "failed", "blocked"]
+        },
+        "lastError": {
+          "$ref": "#/$defs/RuntimeError"
+        },
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/FileArtifact"
+          }
+        }
+      }
+    },
+    "SmokeResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["device", "passed", "screenshotPath"],
+      "properties": {
+        "device": {
+          "$ref": "#/$defs/DeviceTarget"
+        },
+        "passed": {
+          "type": "boolean"
+        },
+        "screenshotPath": {
+          "type": "string"
+        },
+        "error": {
+          "$ref": "#/$defs/RuntimeError"
+        }
+      }
+    },
+    "FinalReport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["runId", "status", "primaryPassed", "artifactRoot", "swiftuiEntryFile", "errors"],
+      "properties": {
+        "runId": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["passed", "failed", "blocked"]
+        },
+        "primaryPassed": {
+          "type": "boolean"
+        },
+        "smokeResults": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SmokeResult"
+          }
+        },
+        "artifactRoot": {
+          "type": "string"
+        },
+        "swiftuiEntryFile": {
+          "type": "string"
+        },
+        "diffReportPath": {
+          "type": "string"
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RuntimeError"
+          }
+        },
+        "nextActions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
