@@ -166,4 +166,34 @@ describe("mock pipeline", () => {
       await rm(tempDir, { recursive: true, force: true });
     }
   });
+
+  it("escapes generated Swift text literals with Swift syntax", async () => {
+    const tempDir = await mkdtemp(path.join(tmpdir(), "viewfoundry-pipeline-"));
+    const sandboxOutput = path.join(tempDir, "Generated.swift");
+
+    try {
+      await runMockPipeline(
+        parseRuntimeRequest({
+          ...sample,
+          prompt: "A\bB\fC\u0000D \"quoted\" \\ path",
+          primaryDevice: {
+            ...sample.primaryDevice,
+            name: "iPhone\u2028Fold"
+          }
+        }),
+        {
+          artifactRoot: tempDir,
+          width: 32,
+          height: 48,
+          sandboxGeneratedFile: sandboxOutput
+        }
+      );
+
+      const source = await readFile(sandboxOutput, "utf8");
+      assert.match(source, /Text\("A\\u\{8\}B\\u\{c\}C\\u\{0\}D \\"quoted\\" \\\\ path"\)/);
+      assert.match(source, /iPhone\\u\{2028\}Fold/);
+    } finally {
+      await rm(tempDir, { recursive: true, force: true });
+    }
+  });
 });

@@ -284,5 +284,25 @@ struct ViewFoundryGeneratedView: View {
 }
 
 function swiftStringLiteral(value: string): string {
-  return JSON.stringify(value);
+  let literal = "\"";
+
+  for (const character of value) {
+    const codePoint = character.codePointAt(0);
+    if (codePoint === undefined) {
+      continue;
+    }
+
+    if (character === "\"") {
+      literal += "\\\"";
+    } else if (character === "\\") {
+      literal += "\\\\";
+    } else if (codePoint < 0x20 || codePoint === 0x7f || codePoint === 0x2028 || codePoint === 0x2029) {
+      literal += `\\u{${codePoint.toString(16)}}`;
+    } else {
+      literal += character;
+    }
+  }
+
+  literal += "\"";
+  return literal;
 }
