@@ -1,0 +1,13 @@
+{
+  "version": "generator-ir/v1",
+  "targetPlatform": "ios",
+  "root": {
+    "kind": "scrollView",
+    "children": [
+      {
+        "kind": "image",
+        "url": "https://example.invalid/hero.png"
+      }
+    ]
+  }
+}
