@@ -28,6 +28,9 @@ test -f scripts/gitleaks-check.sh
 test -f packages/runtime/package.json
 test -f packages/runtime/tsconfig.json
 test -f packages/runtime/src/index.ts
+test -f packages/runtime/src/visual-diff.ts
+test -f packages/runtime/src/diff-cli.ts
+test -f packages/runtime/tests/unit/visual-diff.test.ts
 
 grep -q "one issue at a time" AGENTS.md
 grep -q "@Codex" AGENTS.md

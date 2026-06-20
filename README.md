@@ -44,6 +44,7 @@ Run the TypeScript and scaffold checks:
 npm run typecheck
 npm run build
 npm test
+npm run diff:image -- --target <target.png> --actual <actual.png> --diff <diff.png> --report <report.json>
 npm run sandbox:build
 npm run sandbox:screenshot
 npm run check
@@ -170,6 +171,21 @@ Artifacts:
 - `.viewfoundry/runs/<run>/screenshots/primary.png`
 - `.viewfoundry/runs/<run>/screenshot-runner.json`
 - `.viewfoundry/runs/<run>/final-report.json`
+
+Compare a mockup PNG to a captured screenshot PNG:
+
+```sh
+npm run diff:image -- \
+  --target .viewfoundry/runs/<run>/mockups/target.png \
+  --actual .viewfoundry/runs/<run>/screenshots/primary.png \
+  --diff .viewfoundry/runs/<run>/diffs/primary-diff.png \
+  --report .viewfoundry/runs/<run>/diffs/primary-report.json \
+  --threshold 0.98
+```
+
+The diff command is a deterministic V1 prototype. It requires equal-size PNG
+inputs, scores normalized per-channel pixel similarity, writes a visual diff
+PNG, and does not claim semantic or perceptual matching.
 
 ## Runtime Placeholder
 

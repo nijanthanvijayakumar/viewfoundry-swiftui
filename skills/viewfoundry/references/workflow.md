@@ -44,7 +44,9 @@ Do not start the next issue while the current PR is unmerged.
 5. Run the sandbox on the primary simulator/device with `npm run sandbox:build`
    or a concrete `VIEWFOUNDRY_SANDBOX_DESTINATION`.
 6. Capture a screenshot.
-7. Compare layout, spacing, typography, color, and visible state against the target.
+7. Run `npm run diff:image` against the target mockup PNG and primary
+   screenshot PNG to produce `diffs/primary-report.json` and
+   `diffs/primary-diff.png`.
 8. Iterate until the primary target is close enough for review.
 9. Run extra-device smoke checks only after the primary target is stable.
 10. Record artifact paths and final status in the run report.
@@ -55,6 +57,8 @@ Do not start the next issue while the current PR is unmerged.
 - Record primary device, OS/runtime, appearance, and screenshot path in PR notes.
 - Store run artifacts under `.viewfoundry/runs/<run-id>/` when the runner exists.
 - Keep expected/actual/diff image updates explicit when image fixtures exist.
+- Treat the current PNG diff score as a deterministic prototype only; it is not
+  semantic or perceptual visual matching.
 - Treat Docker checks as portable scaffold checks only; Docker cannot verify SwiftUI simulator output.
 
 ## Future Generator Boundary

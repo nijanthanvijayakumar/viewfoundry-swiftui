@@ -1,6 +1,8 @@
 export { createArtifactPaths } from "./artifacts.js";
 export { createRunId, runViewFoundryPlaceholder } from "./placeholder.js";
 export { parseRuntimeRequest, RuntimeRequestError } from "./validation.js";
+export { comparePngImages, VisualDiffError } from "./visual-diff.js";
+export type { VisualDiffOptions } from "./visual-diff.js";
 export type {
   ArtifactPaths
 } from "./artifacts.js";

@@ -13,6 +13,7 @@ npm install
 npm run typecheck
 npm run build
 npm test
+npm run diff:image -- --target <target.png> --actual <actual.png> --diff <diff.png> --report <report.json>
 npm run sandbox:build
 npm run sandbox:screenshot
 npm run check
@@ -51,6 +52,9 @@ test -f scripts/capture-sandbox-screenshot.sh
 test -f packages/runtime/package.json
 test -f packages/runtime/tsconfig.json
 test -f packages/runtime/src/index.ts
+test -f packages/runtime/src/visual-diff.ts
+test -f packages/runtime/src/diff-cli.ts
+test -f packages/runtime/tests/unit/visual-diff.test.ts
 grep -q "one issue at a time" AGENTS.md
 grep -q "@Codex" AGENTS.md
 grep -q "co-author or generated-by" AGENTS.md
@@ -116,11 +120,32 @@ Do not add Vitest for core logic. Use Vitest only if a UI or component harness
 needs browser-like lifecycle, DOM assertions, or module mocking that Node's
 runner cannot cover cleanly.
 
-## Image Fixtures
+## Image Diff Tests
 
-Use `pixelmatch` and `pngjs` for deterministic PNG diffs.
+Use the runtime PNG diff prototype for deterministic same-size PNG comparisons.
 
-Planned layout:
+Current command:
+
+```sh
+npm run diff:image -- \
+  --target .viewfoundry/runs/<run>/mockups/target.png \
+  --actual .viewfoundry/runs/<run>/screenshots/primary.png \
+  --diff .viewfoundry/runs/<run>/diffs/primary-diff.png \
+  --report .viewfoundry/runs/<run>/diffs/primary-report.json \
+  --threshold 0.98
+```
+
+Current coverage lives in `packages/runtime/tests/unit/visual-diff.test.ts` and
+covers identical PNGs, different PNGs, dimension mismatch, and CLI report
+writing. The prototype:
+
+- Requires PNG inputs with identical dimensions.
+- Scores normalized per-channel absolute pixel similarity.
+- Writes a runtime-contract `VisualDiffReport` JSON file.
+- Writes a simple diff PNG artifact.
+- Does not claim semantic, perceptual, or layout-aware visual matching.
+
+Fixture layout for future checked-in examples:
 
 ```text
 tests/fixtures/images/
@@ -137,12 +162,6 @@ Rules:
 - Keep tolerance explicit per fixture.
 - Fail on missing expected images unless an update flag is passed.
 - Never update expected fixtures as a side effect of a normal test run.
-
-Expected command contract:
-
-```sh
-npm run test:image
-```
 
 ## Plugin And Skill Checks
 
@@ -200,7 +219,7 @@ Planned path:
 4. Compare against `expected` with `pixelmatch`.
 5. Write diff PNGs for inspection.
 
-Current local command:
+Current screenshot command:
 
 ```sh
 npm run sandbox:screenshot
@@ -216,15 +235,19 @@ VIEWFOUNDRY_SIMULATOR_DESTINATION='platform=iOS Simulator,id=<udid>' \
   npm run sandbox:screenshot
 ```
 
-Planned diff command:
+Current diff command:
 
 ```sh
-npm run test:screenshots
+npm run diff:image -- \
+  --target .viewfoundry/runs/<run>/mockups/target.png \
+  --actual .viewfoundry/runs/<run>/screenshots/primary.png \
+  --diff .viewfoundry/runs/<run>/diffs/primary-diff.png \
+  --report .viewfoundry/runs/<run>/diffs/primary-report.json
 ```
 
-This command may call `xcodebuild`, `xcrun simctl`, and the image diff runner.
-Keep it out of required CI until it is fast and reliable on GitHub-hosted macOS
-runners.
+The screenshot command may call `xcodebuild` and `xcrun simctl`; keep that out
+of required CI until it is fast and reliable on GitHub-hosted macOS runners.
+The PNG diff command is covered by unit tests in required CI.
 
 ## CI And Local Split
 
@@ -236,10 +259,6 @@ Required CI:
 - Gitleaks secret scan
 - Optional local pre-commit Gitleaks hook
 - Markdown/link checks, if added
-
-Required later, once image fixtures exist:
-
-- `npm run test:image`
 
 Local-only until stabilized:
 
