@@ -10,6 +10,8 @@ skill scaffold that will guide sandbox work before codegen lands.
 The future runner contract is documented in
 [docs/runtime-contract.md](docs/runtime-contract.md). The current runtime is a
 placeholder only; it validates requests and prints deterministic blocked output.
+The SwiftUI sandbox project is buildable now, but generation and simulator
+automation are still future work.
 
 ## V1 Scope
 
@@ -42,6 +44,7 @@ Run the TypeScript and scaffold checks:
 npm run typecheck
 npm run build
 npm test
+npm run sandbox:build
 npm run check
 npm run secrets
 pre-commit run --all-files
@@ -59,6 +62,9 @@ test -f .gitleaks.toml
 test -f .pre-commit-config.yaml
 test -f .codex-plugin/plugin.json
 test -f skills/viewfoundry/SKILL.md
+test -f examples/Sandbox/ViewFoundrySandbox.xcodeproj/project.pbxproj
+test -f examples/Sandbox/ViewFoundrySandbox/ViewFoundrySandboxApp.swift
+test -f examples/Sandbox/ViewFoundrySandbox/Generated/ViewFoundryGeneratedView.swift
 test -f schemas/runtime-contract.schema.json
 node -e 'for (const file of [".codex-plugin/plugin.json", "schemas/runtime-contract.schema.json"]) JSON.parse(require("fs").readFileSync(file, "utf8"))'
 ```
@@ -93,6 +99,40 @@ Current container behavior:
 
 Docker does not run Xcode, SwiftUI sandbox, or iOS Simulator checks. Run those
 on a macOS host with Xcode installed when the Swift/iOS targets exist.
+
+## SwiftUI Sandbox
+
+The runnable sandbox app lives in `examples/Sandbox`.
+
+```text
+examples/Sandbox/
+  ViewFoundrySandbox.xcodeproj/
+  ViewFoundrySandbox/
+    ViewFoundrySandboxApp.swift
+    Generated/ViewFoundryGeneratedView.swift
+    Assets.xcassets/
+```
+
+`ViewFoundrySandboxApp.swift` is the stable host entry point. Generated SwiftUI
+belongs in `Generated/ViewFoundryGeneratedView.swift` so future runs can replace
+that file without touching the app shell.
+
+Build the sandbox:
+
+```sh
+npm run sandbox:build
+```
+
+To build against a concrete primary simulator from a runtime request, pass an
+Xcode destination:
+
+```sh
+VIEWFOUNDRY_SANDBOX_DESTINATION='platform=iOS Simulator,name=iPhone 17 Pro' \
+  npm run sandbox:build
+```
+
+On hosts without Xcode, the command skips with a clear message so portable CI
+can keep running TypeScript and scaffold checks.
 
 ## Runtime Placeholder
 

@@ -8,7 +8,8 @@
   ],
   "scripts": {
     "build": "npm run build --workspace @viewfoundry/runtime",
-    "check": "npm run typecheck && npm run build && npm test",
+    "check": "npm run typecheck && npm run build && npm test && npm run sandbox:build",
+    "sandbox:build": "sh scripts/build-sandbox.sh",
     "secrets": "sh scripts/gitleaks-check.sh",
     "test": "npm run test:unit",
     "test:unit": "npm run test:unit --workspace @viewfoundry/runtime",

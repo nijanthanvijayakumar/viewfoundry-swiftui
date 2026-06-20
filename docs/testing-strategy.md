@@ -1,7 +1,8 @@
 # Testing Strategy
 
 ViewFoundry SwiftUI is still scaffold-first. Main now has a minimal TypeScript
-runtime package, but no Swift package, generator, or sandbox project.
+runtime package and a buildable SwiftUI sandbox project, but no generator or
+simulator automation.
 
 ## Current Checks
 
@@ -12,6 +13,7 @@ npm install
 npm run typecheck
 npm run build
 npm test
+npm run sandbox:build
 npm run check
 npm run secrets
 pre-commit run --all-files
@@ -36,6 +38,10 @@ test -f skills/viewfoundry/SKILL.md
 test -f skills/viewfoundry/references/architecture.md
 test -f skills/viewfoundry/references/workflow.md
 test -f skills/viewfoundry/assets/swiftui-sandbox-template/ViewFoundrySandboxApp.swift
+test -f examples/Sandbox/ViewFoundrySandbox.xcodeproj/project.pbxproj
+test -f examples/Sandbox/ViewFoundrySandbox.xcodeproj/xcshareddata/xcschemes/ViewFoundrySandbox.xcscheme
+test -f examples/Sandbox/ViewFoundrySandbox/ViewFoundrySandboxApp.swift
+test -f examples/Sandbox/ViewFoundrySandbox/Generated/ViewFoundryGeneratedView.swift
 test -f package.json
 test -f package-lock.json
 test -f tsconfig.base.json
@@ -48,6 +54,7 @@ grep -q "@Codex" AGENTS.md
 grep -q "co-author or generated-by" AGENTS.md
 grep -q "Create a repo skill" skills/viewfoundry/references/workflow.md
 grep -q "Update the skill" skills/viewfoundry/references/workflow.md
+grep -q "ViewFoundryGeneratedView" examples/Sandbox/ViewFoundrySandbox/ViewFoundrySandboxApp.swift
 grep -q "Summary (Why these changes are required)?" .github/pull_request_template.md
 grep -q "What changes are in this PR" .github/pull_request_template.md
 grep -q "Testing details" .github/pull_request_template.md
@@ -62,8 +69,9 @@ docker run --rm viewfoundry-swiftui-check
 ```
 
 Docker is limited to portable checks. It can run npm-based TypeScript checks
-once `package.json` exists, but it cannot run Xcode, SwiftUI sandbox, or iOS
-Simulator checks.
+once `package.json` exists. `npm run sandbox:build` skips honestly when
+`xcodebuild` is unavailable, so Docker cannot verify the SwiftUI binary or iOS
+Simulator behavior.
 
 ## TypeScript Unit Tests
 
@@ -140,26 +148,26 @@ node -e 'JSON.parse(require("fs").readFileSync("schemas/runtime-contract.schema.
 
 ## Swift Sandbox Tests
 
-The Swift sandbox project does not exist yet. The current checked-in sandbox
-asset is a template at
+The Swift sandbox project lives at `examples/Sandbox/ViewFoundrySandbox.xcodeproj`.
+The checked-in skill asset remains a seed template at
 `skills/viewfoundry/assets/swiftui-sandbox-template/ViewFoundrySandboxApp.swift`.
-When a runnable sandbox lands, keep it in an example or sandbox directory and
-make the test command stable:
+The stable local build command is:
 
 ```sh
-xcodebuild \
-  -project examples/Sandbox/ViewFoundrySandbox.xcodeproj \
-  -scheme ViewFoundrySandbox \
-  -destination 'platform=iOS Simulator,name=iPhone 16' \
-  test
+npm run sandbox:build
 ```
 
-If the project becomes a Swift package first, use this local check until the
-sandbox app exists:
+For a concrete primary simulator target, pass the destination from the runtime
+request:
 
 ```sh
-swift test
+VIEWFOUNDRY_SANDBOX_DESTINATION='platform=iOS Simulator,name=iPhone 17 Pro' \
+  npm run sandbox:build
 ```
+
+Generated SwiftUI enters through
+`examples/Sandbox/ViewFoundrySandbox/Generated/ViewFoundryGeneratedView.swift`.
+Keep the app shell stable and replace only generated files during future runs.
 
 ## Simulator Screenshot And Diff Tests
 
@@ -190,6 +198,7 @@ Required CI:
 
 - `npm run test:unit`
 - `tsc --noEmit`
+- `npm run sandbox:build` with an honest skip on hosts without Xcode
 - Gitleaks secret scan
 - Optional local pre-commit Gitleaks hook
 - Markdown/link checks, if added

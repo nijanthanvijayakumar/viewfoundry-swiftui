@@ -13,6 +13,11 @@ test -f skills/viewfoundry/SKILL.md
 test -f skills/viewfoundry/references/architecture.md
 test -f skills/viewfoundry/references/workflow.md
 test -f skills/viewfoundry/assets/swiftui-sandbox-template/ViewFoundrySandboxApp.swift
+test -f examples/Sandbox/ViewFoundrySandbox.xcodeproj/project.pbxproj
+test -f examples/Sandbox/ViewFoundrySandbox.xcodeproj/xcshareddata/xcschemes/ViewFoundrySandbox.xcscheme
+test -f examples/Sandbox/ViewFoundrySandbox/ViewFoundrySandboxApp.swift
+test -f examples/Sandbox/ViewFoundrySandbox/Generated/ViewFoundryGeneratedView.swift
+test -f examples/Sandbox/ViewFoundrySandbox/Assets.xcassets/Contents.json
 test -f docs/runtime-contract.md
 test -f package.json
 test -f package-lock.json
@@ -29,6 +34,8 @@ grep -q "@Codex" AGENTS.md
 grep -q "co-author or generated-by" AGENTS.md
 grep -q "Create a repo skill" skills/viewfoundry/references/workflow.md
 grep -q "Update the skill" skills/viewfoundry/references/workflow.md
+grep -q "ViewFoundryGeneratedView" examples/Sandbox/ViewFoundrySandbox/ViewFoundrySandboxApp.swift
+grep -q "ViewFoundry Sandbox" examples/Sandbox/ViewFoundrySandbox/Generated/ViewFoundryGeneratedView.swift
 grep -q "Summary (Why these changes are required)?" .github/pull_request_template.md
 grep -q "What changes are in this PR" .github/pull_request_template.md
 grep -q "Testing details" .github/pull_request_template.md

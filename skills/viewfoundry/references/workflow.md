@@ -38,7 +38,11 @@ Do not start the next issue while the current PR is unmerged.
 2. Capture or generate the visual target.
 3. Identify the primary device target and appearance.
 4. Create or update a SwiftUI sandbox view from `assets/swiftui-sandbox-template/`.
-5. Run the sandbox on the primary simulator/device.
+   Generated SwiftUI lands in
+   `examples/Sandbox/ViewFoundrySandbox/Generated/ViewFoundryGeneratedView.swift`;
+   keep the app shell stable.
+5. Run the sandbox on the primary simulator/device with `npm run sandbox:build`
+   or a concrete `VIEWFOUNDRY_SANDBOX_DESTINATION`.
 6. Capture a screenshot.
 7. Compare layout, spacing, typography, color, and visible state against the target.
 8. Iterate until the primary target is close enough for review.

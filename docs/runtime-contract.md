@@ -2,7 +2,8 @@
 
 ViewFoundry SwiftUI is still scaffold-only. This contract defines the future
 plugin runtime boundary before the TypeScript runner, SwiftUI generator,
-simulator runner, imagegen integration, or visual diff loop exists.
+simulator runner, imagegen integration, or visual diff loop exists. A buildable
+SwiftUI sandbox host exists under `examples/Sandbox` for future generated views.
 
 ## V1 Promise
 
@@ -47,7 +48,10 @@ Each run writes artifacts under:
 ```
 
 Generated Swift files should stay plain and reviewable. The default app entry
-point remains the sandbox template until a real host project exists.
+point is `examples/Sandbox/ViewFoundrySandbox/ViewFoundrySandboxApp.swift`.
+Generated output should enter through
+`examples/Sandbox/ViewFoundrySandbox/Generated/ViewFoundryGeneratedView.swift`
+until the generator issue defines a richer file layout.
 
 ## Runtime Request
 
