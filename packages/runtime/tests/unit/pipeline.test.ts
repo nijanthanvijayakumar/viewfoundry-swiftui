@@ -75,8 +75,8 @@ describe("mock pipeline", () => {
         sandboxGeneratedFile: path.join(tempDir, "Generated.swift")
       });
 
-      assert.equal(report.status, "passed");
-      assert.equal(report.primaryPassed, true);
+      assert.equal(report.status, "blocked");
+      assert.equal(report.primaryPassed, false);
       assert.equal(report.steps.find((step) => step.step === "diff")?.status, "completed");
       assert.equal(JSON.parse(await readFile(path.join(tempDir, "diffs", "primary-report.json"), "utf8")).passed, true);
     } finally {

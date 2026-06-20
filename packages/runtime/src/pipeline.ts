@@ -204,7 +204,7 @@ function determineStatus(
     return "failed";
   }
   if (diffReport) {
-    return diffReport.passed ? "passed" : "failed";
+    return diffReport.passed ? "blocked" : "failed";
   }
   return "blocked";
 }
