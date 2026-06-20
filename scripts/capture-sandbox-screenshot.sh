@@ -126,7 +126,7 @@ const screenshot = captured
   : undefined;
 const finalReport = {
   runId: env.VIEWFOUNDRY_RUN_ID_VALUE,
-  status: isPassed ? "passed" : "blocked",
+  status: isPassed ? "passed" : status === "failed" ? "failed" : "blocked",
   primaryPassed: isPassed,
   ...(screenshot ? { primaryScreenshot: screenshot } : {}),
   smokeResults: [],
