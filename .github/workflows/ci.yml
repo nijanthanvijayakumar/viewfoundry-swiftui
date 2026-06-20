@@ -25,8 +25,10 @@ jobs:
           test -f AGENTS.md
           test -f .github/pull_request_template.md
           test -f docs/testing-strategy.md
+          test -f docs/runtime-contract.md
           test -f docs/release.md
           test -f .codex-plugin/plugin.json
+          test -f schemas/runtime-contract.schema.json
           test -f skills/viewfoundry/SKILL.md
           test -f skills/viewfoundry/references/architecture.md
           test -f skills/viewfoundry/references/workflow.md
@@ -39,7 +41,8 @@ jobs:
           grep -q "Summary (Why these changes are required)?" .github/pull_request_template.md
           grep -q "What changes are in this PR" .github/pull_request_template.md
           grep -q "Testing details" .github/pull_request_template.md
+          node -e 'for (const file of [".codex-plugin/plugin.json", "schemas/runtime-contract.schema.json"]) JSON.parse(require("fs").readFileSync(file, "utf8"))'
 
       # TODO: Add TypeScript typecheck/tests and npm audit when package.json exists.
       # TODO: Add Swift package tests when Package.swift exists.
-      # TODO: Add plugin manifest validation when the manifest and validator exist.
+      # TODO: Add full plugin manifest validation when the validator exists.
