@@ -1,15 +1,14 @@
-## Summary
+## Summary (Why these changes are required)?
 
 -
 
-## Change Type
+## What changes are in this PR
 
+- [ ] Breaking changes
 - [ ] Documentation
-- [ ] Maintenance
-- [ ] Feature
-- [ ] Fix
+- [ ] Non-breaking changes
 
-## Testing
+## Testing details
 
 -
 

@@ -9,16 +9,21 @@ Use this skill for ViewFoundry SwiftUI repo work that turns a visual target into
 
 ## Workflow
 
-1. Read `references/architecture.md` before changing project scope, plugin shape, generator boundaries, simulator policy, or App Intents assumptions.
-2. Read `references/workflow.md` before implementing a mockup-to-SwiftUI iteration, verification pass, or sandbox template update.
-3. Use `assets/swiftui-sandbox-template/` as the starting point for sandbox files when a SwiftUI host app or example target is requested.
-4. Prefer one primary device target for pixel verification in V1, then add extra-device smoke checks only after the primary pass is stable.
-5. Treat `ios-app-intents` as optional and relevant only for Siri, Shortcuts, Spotlight, widgets, or Control Center actions.
+1. Read `../../AGENTS.md` before issue work, PRs, reviews, merges, or skill updates.
+2. Read `references/architecture.md` before changing project scope, plugin shape, generator boundaries, simulator policy, or App Intents assumptions.
+3. Read `references/workflow.md` before implementing a mockup-to-SwiftUI iteration, verification pass, or sandbox template update.
+4. Use `assets/swiftui-sandbox-template/` as the starting point for sandbox files when a SwiftUI host app or example target is requested.
+5. Prefer one primary device target for pixel verification in V1, then add extra-device smoke checks only after the primary pass is stable.
+6. Treat `ios-app-intents` as optional and relevant only for Siri, Shortcuts, Spotlight, widgets, or Control Center actions.
 
 ## Guardrails
 
 - Keep generated SwiftUI plain and inspectable.
 - Keep references and templates small enough to review in pull requests.
+- Work one GitHub issue at a time.
+- Update this skill or `references/` when reviewed repo process changes.
+- Ask `@Codex` for PR review and wait for clean feedback before merge.
 - Do not promise all-device pixel perfection.
 - Do not introduce hidden runtime behavior while the repo is scaffold-only.
 - Do not implement TypeScript parsing, SwiftUI generation, or image diff scripts unless the current issue explicitly asks for them.
+- Do not add co-author or generated-by attribution.
