@@ -23,6 +23,7 @@ derived_data="${VIEWFOUNDRY_DERIVED_DATA:-$artifact_root/DerivedData}"
 app_path="$derived_data/Build/Products/Debug-iphonesimulator/ViewFoundrySandbox.app"
 build_log="$artifact_root/build.log"
 simctl_log="$artifact_root/simctl.log"
+selector_log="$artifact_root/simulator-selector.log"
 devices_json="$artifact_root/simctl-devices.json"
 request_meta_json="$artifact_root/request-device.json"
 simulator_meta_json="$artifact_root/selected-simulator.json"
@@ -78,6 +79,7 @@ write_report() {
   export VIEWFOUNDRY_APP_PATH="$app_path"
   export VIEWFOUNDRY_BUILD_LOG="$build_log"
   export VIEWFOUNDRY_SIMCTL_LOG="$simctl_log"
+  export VIEWFOUNDRY_SELECTOR_LOG="$selector_log"
   export VIEWFOUNDRY_STARTED_AT="$started_at"
   export VIEWFOUNDRY_FINISHED_AT="$finished_at"
   export VIEWFOUNDRY_CAPTURED_AT="$captured_at"
@@ -162,6 +164,7 @@ const metadata = {
   finalReportPath: env.VIEWFOUNDRY_FINAL_REPORT_PATH,
   buildLogPath: env.VIEWFOUNDRY_BUILD_LOG,
   simctlLogPath: env.VIEWFOUNDRY_SIMCTL_LOG,
+  selectorLogPath: env.VIEWFOUNDRY_SELECTOR_LOG,
   requestDevice: {
     name: env.VIEWFOUNDRY_REQUEST_DEVICE_NAME,
     os: env.VIEWFOUNDRY_REQUEST_DEVICE_OS,
@@ -286,7 +289,7 @@ else
     fail "screenshot" "Could not list available simulators. See $simctl_log." 1 true
   fi
 
-  if ! node - "$devices_json" "$request_device_name" "$request_device_os" "$simulator_meta_json" <<'NODE'
+  if ! node - "$devices_json" "$request_device_name" "$request_device_os" "$simulator_meta_json" 2>"$selector_log" <<'NODE'
 const fs = require("fs");
 
 const devicesPath = process.argv[2];
@@ -356,7 +359,8 @@ for (const [runtimeIdentifier, devices] of Object.entries(devicesByRuntime)) {
 if (candidates.length === 0) {
   const osHint = requestedOs ? ` on ${requestedOs}` : "";
   const listed = available.length > 0 ? available.join(", ") : "none";
-  throw new Error(`No available simulator named "${requestedName}"${osHint}. Available: ${listed}`);
+  console.error(`No available simulator named "${requestedName}"${osHint}. Available: ${listed}`);
+  process.exit(1);
 }
 
 candidates.sort((left, right) => compareVersions(left.runtime.version, right.runtime.version));
@@ -373,7 +377,7 @@ const metadata = {
   fs.writeFileSync(outputPath, `${JSON.stringify(metadata, null, 2)}\n`);
 NODE
   then
-    selector_error="$(node -e 'process.stdout.write(require("fs").readFileSync(process.argv[1], "utf8"))' "$simctl_log" 2>/dev/null || true)"
+    selector_error="$(node -e 'process.stdout.write(require("fs").readFileSync(process.argv[1], "utf8").trim())' "$selector_log" 2>/dev/null || true)"
     if [ -z "$selector_error" ]; then
       selector_error="Could not select simulator for $request_device_name."
     fi
