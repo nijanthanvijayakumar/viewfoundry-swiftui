@@ -1,12 +1,23 @@
 # Testing Strategy
 
-ViewFoundry SwiftUI is still a scaffold. Main currently has no `package.json`,
-Swift package, generator, or sandbox project, so these are command contracts to
-activate as each surface lands.
+ViewFoundry SwiftUI is still scaffold-first. Main now has a minimal TypeScript
+runtime package, but no Swift package, generator, or sandbox project.
 
 ## Current Checks
 
-Run these until code targets exist:
+Run these for the TypeScript runtime:
+
+```sh
+npm install
+npm run typecheck
+npm run build
+npm test
+npm run check
+npm run secrets
+pre-commit run --all-files
+```
+
+Run these scaffold checks:
 
 ```sh
 git status --short
@@ -16,6 +27,8 @@ test -f AGENTS.md
 test -f .github/pull_request_template.md
 test -f docs/testing-strategy.md
 test -f docs/runtime-contract.md
+test -f .gitleaks.toml
+test -f .pre-commit-config.yaml
 test -f docs/release.md
 test -f .codex-plugin/plugin.json
 test -f schemas/runtime-contract.schema.json
@@ -23,6 +36,13 @@ test -f skills/viewfoundry/SKILL.md
 test -f skills/viewfoundry/references/architecture.md
 test -f skills/viewfoundry/references/workflow.md
 test -f skills/viewfoundry/assets/swiftui-sandbox-template/ViewFoundrySandboxApp.swift
+test -f package.json
+test -f package-lock.json
+test -f tsconfig.base.json
+test -f scripts/gitleaks-check.sh
+test -f packages/runtime/package.json
+test -f packages/runtime/tsconfig.json
+test -f packages/runtime/src/index.ts
 grep -q "one issue at a time" AGENTS.md
 grep -q "@Codex" AGENTS.md
 grep -q "co-author or generated-by" AGENTS.md
@@ -52,15 +72,14 @@ Use Node's built-in test runner for core TypeScript logic.
 - Put unit tests beside TypeScript source or under `tests/unit`.
 - Keep tests focused on parser, model, generator, and fixture normalization
   behavior.
-- Add `npm run test:unit` when `package.json` exists.
-- Expected command contract:
+- Current command:
 
 ```sh
 npm run test:unit
 ```
 
-The script should compile TypeScript first, then run Node tests against emitted
-JavaScript, for example:
+The script compiles TypeScript first, then runs Node tests against emitted
+JavaScript:
 
 ```sh
 tsc -p tsconfig.json
@@ -167,12 +186,17 @@ runners.
 
 ## CI And Local Split
 
-Required CI, once scripts exist:
+Required CI:
 
 - `npm run test:unit`
-- `npm run test:image`
 - `tsc --noEmit`
+- Gitleaks secret scan
+- Optional local pre-commit Gitleaks hook
 - Markdown/link checks, if added
+
+Required later, once image fixtures exist:
+
+- `npm run test:image`
 
 Local-only until stabilized:
 

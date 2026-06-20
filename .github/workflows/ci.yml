@@ -17,6 +17,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
 
       - name: Check required repo files
         run: |
@@ -26,6 +34,9 @@ jobs:
           test -f .github/pull_request_template.md
           test -f docs/testing-strategy.md
           test -f docs/runtime-contract.md
+          test -f .gitleaks.toml
+          test -f .pre-commit-config.yaml
+          test -f scripts/gitleaks-check.sh
           test -f docs/release.md
           test -f .codex-plugin/plugin.json
           test -f schemas/runtime-contract.schema.json
@@ -33,9 +44,17 @@ jobs:
           test -f skills/viewfoundry/references/architecture.md
           test -f skills/viewfoundry/references/workflow.md
           test -f skills/viewfoundry/assets/swiftui-sandbox-template/ViewFoundrySandboxApp.swift
+          test -f package.json
+          test -f package-lock.json
+          test -f tsconfig.base.json
+          test -f packages/runtime/package.json
+          test -f packages/runtime/tsconfig.json
+          test -f packages/runtime/src/index.ts
           grep -q "one issue at a time" AGENTS.md
           grep -q "@Codex" AGENTS.md
           grep -q "co-author or generated-by" AGENTS.md
+          grep -q "Never run \`gh auth refresh\`" AGENTS.md
+          grep -q "No repo-wide secret allowlist" .gitleaks.toml
           grep -q "Create a repo skill" skills/viewfoundry/references/workflow.md
           grep -q "Update the skill" skills/viewfoundry/references/workflow.md
           grep -q "Summary (Why these changes are required)?" .github/pull_request_template.md
@@ -43,6 +62,17 @@ jobs:
           grep -q "Testing details" .github/pull_request_template.md
           node -e 'for (const file of [".codex-plugin/plugin.json", "schemas/runtime-contract.schema.json"]) JSON.parse(require("fs").readFileSync(file, "utf8"))'
 
-      # TODO: Add TypeScript typecheck/tests and npm audit when package.json exists.
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run TypeScript checks
+        run: npm run check
+
+      - name: Run secret scan
+        uses: gitleaks/gitleaks-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # TODO: Add npm audit once external runtime dependencies exist.
       # TODO: Add Swift package tests when Package.swift exists.
       # TODO: Add full plugin manifest validation when the validator exists.

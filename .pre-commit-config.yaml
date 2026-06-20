@@ -1,0 +1,8 @@
+repos:
+  - repo: local
+    hooks:
+      - id: gitleaks
+        name: gitleaks
+        entry: sh scripts/gitleaks-check.sh
+        language: system
+        pass_filenames: false

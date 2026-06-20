@@ -8,11 +8,22 @@
 4. Open a PR with summary, change checklist, and testing details.
 5. Ask `@Codex` for review and wait.
 6. Fix all actionable feedback, then rerun checks.
-7. Merge only after clean review and checks.
-8. Verify the issue closed; if not, add the PR link and close it.
-9. Delete the branch and clean/archive the child worktree.
+7. Run Gitleaks against local history/current tree and remote PR state.
+8. If a secret reaches remote Git, stop and remove it from branch history before merge.
+9. Squash merge only after clean review, checks, and secret scan.
+10. Verify the issue closed; if not, add the PR link and close it.
+11. Delete the branch and clean/archive the child worktree.
 
 Do not start the next issue while the current PR is unmerged.
+
+## Secret And Auth Guardrails
+
+- Use `npm run secrets` for local Gitleaks checks.
+- Use `pre-commit install` to enable the local Gitleaks hook when pre-commit is available.
+- Use `gitleaks detect --source . --config .gitleaks.toml --log-opts=--all --redact --verbose` after fetching remote refs.
+- Inspect PR diff state before merge; a clean Gitleaks scan means no history rewrite is needed.
+- Never run `gh auth refresh` unless the user explicitly asks in the current turn.
+- If a child thread is still editing or polling, stop it before orchestrator edits the same worktree.
 
 ## Skill Updates
 
@@ -44,4 +55,4 @@ Do not start the next issue while the current PR is unmerged.
 
 ## Future Generator Boundary
 
-When TypeScript work starts, keep parser/model/generator tests separate from screenshot verification. A passing generator unit test is not a visual acceptance result.
+Keep runtime parser/model/generator tests separate from screenshot verification. A passing TypeScript unit test is not a visual acceptance result.

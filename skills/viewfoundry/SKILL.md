@@ -23,7 +23,10 @@ Use this skill for ViewFoundry SwiftUI repo work that turns a visual target into
 - Work one GitHub issue at a time.
 - Update this skill or `references/` when reviewed repo process changes.
 - Ask `@Codex` for PR review and wait for clean feedback before merge.
+- Run Gitleaks before merge; include local history/current tree and remote PR state.
+- Squash merge only.
 - Do not promise all-device pixel perfection.
 - Do not introduce hidden runtime behavior while the repo is scaffold-only.
 - Do not implement TypeScript parsing, SwiftUI generation, or image diff scripts unless the current issue explicitly asks for them.
 - Do not add co-author or generated-by attribution.
+- Do not run `gh auth refresh` unless the user explicitly asks in the current turn.

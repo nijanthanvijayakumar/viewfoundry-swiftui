@@ -1,0 +1,21 @@
+{
+  "name": "viewfoundry-swiftui",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/runtime"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace @viewfoundry/runtime",
+    "check": "npm run typecheck && npm run build && npm test",
+    "secrets": "sh scripts/gitleaks-check.sh",
+    "test": "npm run test:unit",
+    "test:unit": "npm run test:unit --workspace @viewfoundry/runtime",
+    "typecheck": "npm run typecheck --workspace @viewfoundry/runtime"
+  },
+  "devDependencies": {
+    "@types/node": "^22.19.21",
+    "typescript": "^5.5.4"
+  }
+}

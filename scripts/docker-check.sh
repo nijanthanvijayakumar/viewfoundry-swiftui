@@ -14,6 +14,15 @@ test -f skills/viewfoundry/references/architecture.md
 test -f skills/viewfoundry/references/workflow.md
 test -f skills/viewfoundry/assets/swiftui-sandbox-template/ViewFoundrySandboxApp.swift
 test -f docs/runtime-contract.md
+test -f package.json
+test -f package-lock.json
+test -f tsconfig.base.json
+test -f .gitleaks.toml
+test -f .pre-commit-config.yaml
+test -f scripts/gitleaks-check.sh
+test -f packages/runtime/package.json
+test -f packages/runtime/tsconfig.json
+test -f packages/runtime/src/index.ts
 
 grep -q "one issue at a time" AGENTS.md
 grep -q "@Codex" AGENTS.md
@@ -37,20 +46,24 @@ if [ -f package.json ]; then
     npm install
   fi
 
-  if has_script typecheck; then
-    npm run typecheck
-  fi
+  if has_script check; then
+    npm run check
+  else
+    if has_script typecheck; then
+      npm run typecheck
+    fi
 
-  if has_script test; then
-    npm test
-  fi
+    if has_script test; then
+      npm test
+    fi
 
-  if has_script test:unit; then
-    npm run test:unit
-  fi
+    if has_script test:unit; then
+      npm run test:unit
+    fi
 
-  if has_script test:image; then
-    npm run test:image
+    if has_script test:image; then
+      npm run test:image
+    fi
   fi
 else
   echo "No package.json yet; ran scaffold checks only."

@@ -1,0 +1,6 @@
+title = "ViewFoundry Gitleaks"
+
+# No repo-wide secret allowlist.
+
+[extend]
+useDefault = true

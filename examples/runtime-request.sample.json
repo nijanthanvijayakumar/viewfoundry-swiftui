@@ -1,0 +1,22 @@
+{
+  "prompt": "Build a compact onboarding screen for a habit tracker.",
+  "targetPlatform": "ios",
+  "primaryDevice": {
+    "name": "iPhone 16",
+    "os": "iOS 18",
+    "appearance": "light"
+  },
+  "smokeDevices": [
+    {
+      "name": "iPhone SE",
+      "os": "iOS 18",
+      "appearance": "light"
+    }
+  ],
+  "visualConstraints": {
+    "style": ["plain SwiftUI", "large tap targets"],
+    "layout": ["single screen", "no scrolling"],
+    "accessibility": ["Dynamic Type friendly"],
+    "avoid": ["custom runtime dependency"]
+  }
+}

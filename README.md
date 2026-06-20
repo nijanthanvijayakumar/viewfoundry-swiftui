@@ -3,13 +3,13 @@
 ViewFoundry SwiftUI is an early-stage project for exploring how a small,
 structured view description could map to SwiftUI.
 
-The repository is currently a scaffold. It has a license and project tracking,
-but no Swift package, app target, generator, or runtime code yet.
-It now includes the base Codex plugin and ViewFoundry skill scaffold that will
-guide sandbox work before codegen lands.
+The repository is currently a scaffold. It has a license, project tracking, a
+minimal TypeScript runtime package, and the base Codex plugin and ViewFoundry
+skill scaffold that will guide sandbox work before codegen lands.
 
 The future runner contract is documented in
-[docs/runtime-contract.md](docs/runtime-contract.md). No runner exists yet.
+[docs/runtime-contract.md](docs/runtime-contract.md). The current runtime is a
+placeholder only; it validates requests and prints deterministic blocked output.
 
 ## V1 Scope
 
@@ -22,7 +22,6 @@ The future runner contract is documented in
 
 ## Non-Goals
 
-- No TypeScript implementation in this repository.
 - No production-ready SwiftUI code generation yet.
 - No cross-platform renderer yet.
 - No design-tool plugin yet.
@@ -32,12 +31,23 @@ The future runner contract is documented in
 ```sh
 git clone https://github.com/nijanthanvijayakumar/viewfoundry-swiftui.git
 cd viewfoundry-swiftui
+npm install
 ```
 
 ## Checks
 
-There is no build or test target yet. Current repo checks are documentation and
-scaffold checks:
+Run the TypeScript and scaffold checks:
+
+```sh
+npm run typecheck
+npm run build
+npm test
+npm run check
+npm run secrets
+pre-commit run --all-files
+```
+
+Current scaffold checks:
 
 ```sh
 git status --short
@@ -45,6 +55,8 @@ test -f README.md
 test -f LICENSE
 test -f docs/testing-strategy.md
 test -f docs/runtime-contract.md
+test -f .gitleaks.toml
+test -f .pre-commit-config.yaml
 test -f .codex-plugin/plugin.json
 test -f skills/viewfoundry/SKILL.md
 test -f schemas/runtime-contract.schema.json
@@ -76,12 +88,42 @@ Current container behavior:
 
 - Verifies core docs plus the plugin manifest, ViewFoundry skill, references,
   and SwiftUI sandbox template.
-- If `package.json` exists, installs npm dependencies.
-- Runs `npm run typecheck`, `npm test`, `npm run test:unit`, and
-  `npm run test:image` when those scripts exist.
+- Installs npm dependencies.
+- Runs `npm run check`.
 
 Docker does not run Xcode, SwiftUI sandbox, or iOS Simulator checks. Run those
 on a macOS host with Xcode installed when the Swift/iOS targets exist.
+
+## Runtime Placeholder
+
+The runtime package lives at `packages/runtime`. It does not call imagegen,
+generate SwiftUI, or run simulators yet.
+
+```sh
+npm run build
+node packages/runtime/dist/src/cli.js \
+  --input examples/runtime-request.sample.json \
+  --output .viewfoundry/runs/sample
+```
+
+The CLI validates the request and prints a deterministic blocked final report.
+
+## Secret Scanning
+
+Run Gitleaks before publishing changes that touch credentials, workflow files, or
+dependency metadata:
+
+```sh
+npm run secrets
+```
+
+Install the local hook once per checkout:
+
+```sh
+pre-commit install
+```
+
+CI and pre-commit both run Gitleaks.
 
 ## Project Links
 

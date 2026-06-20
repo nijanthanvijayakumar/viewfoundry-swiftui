@@ -25,6 +25,19 @@
 5. Ask `@Codex` for review.
 6. Fix all actionable feedback.
 7. Rerun checks.
-8. Merge only after clean review and checks.
-9. Verify issue closure; comment with PR link and close manually if needed.
-10. Delete branch, clean child worktree, and archive/handoff.
+8. Run Gitleaks on local history/current tree and inspect remote PR state for leaks.
+9. If a secret reaches remote Git, stop and remove it from branch history before merge.
+10. Merge only after clean review, checks, and secret scan.
+11. Squash merge only.
+12. Verify issue closure; comment with PR link and close manually if needed.
+13. Delete branch, clean child worktree, and archive/handoff.
+
+## GitHub Auth
+
+- Never run `gh auth refresh` unless the user explicitly asks in the current turn.
+- If GitHub auth lacks a scope, report the missing scope and stop; do not start device-login polling.
+
+## Child Threads
+
+- Stop child work before the orchestrator edits the same worktree.
+- Do not let child threads keep polling when the orchestrator is active.
