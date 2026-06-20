@@ -1,0 +1,15 @@
+{
+  "version": "generator-ir/v1",
+  "targetPlatform": "ios",
+  "root": {
+    "kind": "vstack",
+    "spacing": -4,
+    "children": [
+      {
+        "kind": "text",
+        "content": "",
+        "textStyle": "display"
+      }
+    ]
+  }
+}

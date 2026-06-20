@@ -1,7 +1,8 @@
 # Generator Plan And Fixtures
 
-Phase 0 defines the first real SwiftUI generator boundary. It does not
-implement generation, provider calls, or production SwiftUI output.
+Phase 0 defines the first real SwiftUI generator boundary. It adds a typed
+intermediate representation, but does not implement generation, provider calls,
+or production SwiftUI output.
 
 ## Architecture
 
@@ -13,8 +14,8 @@ current boundaries.
 Generator flow:
 
 1. Normalize the `RuntimeRequest` into a `DesignBrief`.
-2. Convert the brief into a small internal view model.
-3. Lower the model into plain SwiftUI source and asset metadata.
+2. Convert the brief into the typed generator IR.
+3. Lower the IR into plain SwiftUI source and asset metadata.
 4. Write generated files under `.viewfoundry/runs/<run-id>/swiftui/`.
 5. Copy the entry view into
    `examples/Sandbox/ViewFoundrySandbox/Generated/ViewFoundryGeneratedView.swift`.
@@ -32,6 +33,32 @@ The runtime contract and schema are unchanged for this phase. The existing
 
 Add schema fields later only when a generator PR needs data that cannot fit
 those fields.
+
+## Generator IR
+
+The IR lives in `packages/runtime/src/generator-ir.ts` and is exported from the
+runtime package. It is an internal generator boundary, not a runtime request
+schema change.
+
+Current document shape:
+
+- `version`: `generator-ir/v1`
+- `targetPlatform`: `ios`
+- `root`: `zstack` or `vstack`
+- `unsupportedRequestParts`: optional non-empty strings
+- `assumptions`: optional non-empty strings
+
+Supported nodes:
+
+- `zstack` and `vstack` with children, optional `alignment`, `spacing`,
+  `padding`, system background, and safe-area behavior
+- `text` with static content, `.caption`, `.headline`, `.title`, or `.body`
+- primary `button` with a static text label
+- `sfSymbol` with a static SF Symbol name
+
+Unsupported node kinds, unknown fields, malformed values, custom fonts, remote
+images, animations, navigation, lists, forms, tab bars, charts, maps, data
+binding, and scrolling are rejected by validation.
 
 ## First Supported Subset
 
@@ -51,7 +78,16 @@ must not be silently dropped.
 
 ## Deterministic Fixtures
 
-Generator fixtures should be checked in under:
+Generator IR fixtures are checked in under:
+
+```text
+packages/runtime/tests/fixtures/generator-ir/
+  onboarding-basic.json
+  malformed.json
+  unsupported-structure.json
+```
+
+SwiftUI generator output fixtures should be checked in under:
 
 ```text
 packages/runtime/tests/fixtures/generator/

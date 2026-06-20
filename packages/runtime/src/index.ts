@@ -1,5 +1,6 @@
 export { createArtifactPaths } from "./artifacts.js";
 export { createRunId, runViewFoundryPlaceholder } from "./placeholder.js";
+export { parseGeneratorIR, GeneratorIRError } from "./generator-ir.js";
 export { parseRuntimeRequest, RuntimeRequestError } from "./validation.js";
 export { comparePngImages, VisualDiffError } from "./visual-diff.js";
 export type { VisualDiffOptions } from "./visual-diff.js";
@@ -16,6 +17,19 @@ export type {
   DeviceTarget,
   FileArtifact,
   FinalReport,
+  GeneratorIR,
+  GeneratorIRAlignment,
+  GeneratorIRButtonNode,
+  GeneratorIRForegroundStyle,
+  GeneratorIRNode,
+  GeneratorIRNodeKind,
+  GeneratorIRStackKind,
+  GeneratorIRStackNode,
+  GeneratorIRSymbolNode,
+  GeneratorIRSystemBackground,
+  GeneratorIRTextNode,
+  GeneratorIRTextStyle,
+  GeneratorIRVersion,
   ImagegenRequest,
   IterationState,
   MockupArtifact,

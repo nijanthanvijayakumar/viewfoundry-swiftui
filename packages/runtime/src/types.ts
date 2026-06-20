@@ -81,6 +81,59 @@ export interface SwiftUIGenerationOutput {
   assumptions?: string[];
 }
 
+export type GeneratorIRVersion = "generator-ir/v1";
+export type GeneratorIRStackKind = "zstack" | "vstack";
+export type GeneratorIRNodeKind = GeneratorIRStackKind | "text" | "button" | "sfSymbol";
+export type GeneratorIRAlignment = "leading" | "center" | "trailing";
+export type GeneratorIRTextStyle = "caption" | "headline" | "title" | "body";
+export type GeneratorIRForegroundStyle = "primary" | "secondary";
+export type GeneratorIRSystemBackground = "systemBackground" | "secondarySystemBackground";
+
+export interface GeneratorIR {
+  version: GeneratorIRVersion;
+  targetPlatform: TargetPlatform;
+  root: GeneratorIRStackNode;
+  unsupportedRequestParts?: string[];
+  assumptions?: string[];
+}
+
+export interface GeneratorIRStackNode {
+  kind: GeneratorIRStackKind;
+  children: GeneratorIRNode[];
+  alignment?: GeneratorIRAlignment;
+  spacing?: number;
+  padding?: number;
+  background?: GeneratorIRSystemBackground;
+  ignoresSafeArea?: boolean;
+}
+
+export interface GeneratorIRTextNode {
+  kind: "text";
+  content: string;
+  textStyle: GeneratorIRTextStyle;
+  foregroundStyle?: GeneratorIRForegroundStyle;
+  bold?: boolean;
+}
+
+export interface GeneratorIRButtonNode {
+  kind: "button";
+  label: string;
+  role: "primary";
+}
+
+export interface GeneratorIRSymbolNode {
+  kind: "sfSymbol";
+  systemName: string;
+  textStyle?: GeneratorIRTextStyle;
+  foregroundStyle?: GeneratorIRForegroundStyle;
+}
+
+export type GeneratorIRNode =
+  | GeneratorIRStackNode
+  | GeneratorIRTextNode
+  | GeneratorIRButtonNode
+  | GeneratorIRSymbolNode;
+
 export interface SimulatorScreenshotArtifact {
   device: CapturedDeviceTarget;
   path: string;

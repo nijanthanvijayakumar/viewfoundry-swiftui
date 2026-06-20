@@ -6,8 +6,9 @@ visual diff prototypes, and a deterministic mockup stub, but no SwiftUI
 generator.
 
 The first generator fixture plan lives in
-[generator-plan.md](generator-plan.md). Generator tests should land with the
-implementation issue, not in Phase 0.
+[generator-plan.md](generator-plan.md). Phase 0 includes generator IR parser
+fixtures only; SwiftUI output fixture tests land with the generator emission
+issue.
 
 ## Current Checks
 
@@ -200,8 +201,18 @@ capture remain separate future stages.
 
 ## Generator Fixture Tests
 
-Do not implement the generator in Phase 0. When the generator implementation
-issue starts, add deterministic fixtures under
+Phase 0 validates typed generator IR fixtures under
+`packages/runtime/tests/fixtures/generator-ir/`.
+
+Current coverage:
+
+- Accept the `generator-ir/v1` iOS subset.
+- Reject malformed supported nodes.
+- Reject unsupported layout and component structures.
+- Reject non-stack roots.
+
+Do not implement SwiftUI emission in Phase 0. When the generator emission issue
+starts, add deterministic fixtures under
 `packages/runtime/tests/fixtures/generator/` as described in
 [generator-plan.md](generator-plan.md).
 
