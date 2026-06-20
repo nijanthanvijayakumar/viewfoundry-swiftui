@@ -106,9 +106,7 @@ const fs = require("fs");
 
 const env = process.env;
 const status = env.VIEWFOUNDRY_REPORT_STATUS;
-const finalStatus =
-  status === "passed" ? "passed" : status === "failed" ? "failed" : "blocked";
-const primaryPassed = finalStatus === "passed";
+const finalStatus = status === "failed" ? "failed" : "blocked";
 const error = env.VIEWFOUNDRY_ERROR_MESSAGE
   ? {
       step: env.VIEWFOUNDRY_ERROR_STEP,
@@ -138,15 +136,13 @@ const screenshot = captured
 const finalReport = {
   runId: env.VIEWFOUNDRY_RUN_ID_VALUE,
   status: finalStatus,
-  primaryPassed,
+  primaryPassed: false,
   ...(screenshot ? { primaryScreenshot: screenshot } : {}),
   smokeResults: [],
   artifactRoot: env.VIEWFOUNDRY_ARTIFACT_ROOT,
   swiftuiEntryFile: env.VIEWFOUNDRY_SWIFTUI_ENTRY_FILE,
   errors: error ? [error] : [],
-  nextActions: primaryPassed
-    ? []
-    : captured
+  nextActions: captured
       ? ["Run visual diff as next stage. Pass requires diffReportPath in final report."]
     : ["Fix the reported simulator runner error, then rerun the screenshot command."]
 };
