@@ -157,7 +157,8 @@ final report:
 - `primaryPassed`
 - `smokeResults`
 - `artifactRoot`
-- `swiftuiEntryFile`
+- `swiftuiEntryFile` when SwiftUI generation produced an entry file; passed
+  reports must include it
 - `diffReportPath`
 - `errors`
 - `nextActions`
@@ -195,7 +196,8 @@ when one of these happens:
 - visual constraints conflict with V1 non-goals
 
 Retries must not mutate expected fixtures, delete prior attempts, or hide
-unsupported request parts.
+unsupported request parts. Blocked reports before SwiftUI generation must not
+fabricate `swiftuiEntryFile`.
 
 ## Future Entry Points
 

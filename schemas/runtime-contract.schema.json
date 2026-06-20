@@ -323,7 +323,22 @@
     "FinalReport": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["runId", "status", "primaryPassed", "artifactRoot", "swiftuiEntryFile", "errors"],
+      "required": ["runId", "status", "primaryPassed", "artifactRoot", "errors"],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "passed"
+              }
+            },
+            "required": ["status"]
+          },
+          "then": {
+            "required": ["swiftuiEntryFile"]
+          }
+        }
+      ],
       "properties": {
         "runId": {
           "type": "string"
