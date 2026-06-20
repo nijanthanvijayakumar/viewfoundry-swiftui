@@ -7,7 +7,7 @@ bundle_id="com.viewfoundry.sandbox"
 swiftui_entry_file="examples/Sandbox/ViewFoundrySandbox/Generated/ViewFoundryGeneratedView.swift"
 
 request_path="${VIEWFOUNDRY_RUNTIME_REQUEST:-examples/runtime-request.sample.json}"
-run_id="${VIEWFOUNDRY_RUN_ID:-run-$(date -u +%Y%m%dT%H%M%SZ)}"
+run_id="${VIEWFOUNDRY_RUN_ID:-run-$(date -u +%Y%m%dT%H%M%SZ)-$$}"
 artifact_root="${VIEWFOUNDRY_RUN_DIR:-.viewfoundry/runs/$run_id}"
 simulator_override_destination="${VIEWFOUNDRY_SIMULATOR_DESTINATION:-${VIEWFOUNDRY_SIMULATOR_XCODE_DESTINATION:-${VIEWFOUNDRY_SANDBOX_DESTINATION:-}}}"
 simulator_override_udid="${VIEWFOUNDRY_SIMULATOR_UDID:-${VIEWFOUNDRY_SIMULATOR_ID:-}}"
