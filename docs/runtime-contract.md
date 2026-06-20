@@ -159,9 +159,9 @@ final report:
   `device.name`, `device.os`, `device.appearance`, `path`, and `capturedAt`;
   passed reports must include it
 - `smokeResults`; passed smoke checks include `screenshot` metadata with
-  `device.name`, `device.os`, `device.appearance`, `path`, and `capturedAt`;
-  failed smoke checks include `error` and `failureArtifactPath` and must not
-  include `screenshot`
+  `device.name`, `device.os`, `device.appearance`, `path`, and `capturedAt`,
+  and must not include `error` or `failureArtifactPath`; failed smoke checks
+  include `error` and `failureArtifactPath` and must not include `screenshot`
 - `artifactRoot`
 - `swiftuiEntryFile` when SwiftUI generation produced an entry file; passed
   reports must include it
@@ -170,9 +170,9 @@ final report:
 - `nextActions`
 
 Passed reports must set `primaryPassed` to `true` and include primary screenshot
-metadata. Passed smoke results record `screenshot` metadata. Failed smoke checks
-record `error` and `failureArtifactPath` instead of fabricating or carrying a
-screenshot.
+metadata. Passed smoke results record only `screenshot` metadata. Failed smoke
+checks record `error` and `failureArtifactPath` instead of fabricating or
+carrying a screenshot.
 
 ## Success Rules
 
