@@ -135,4 +135,35 @@ describe("mock pipeline", () => {
       await rm(tempDir, { recursive: true, force: true });
     }
   });
+
+  it("records below-threshold diffs as failed steps with errors", async () => {
+    const tempDir = await mkdtemp(path.join(tmpdir(), "viewfoundry-pipeline-"));
+    const actual = path.join(tempDir, "actual.png");
+
+    try {
+      const png = new PNG({ width: 32, height: 48 });
+      for (let offset = 0; offset < png.data.length; offset += 4) {
+        png.data[offset] = 255;
+        png.data[offset + 1] = 0;
+        png.data[offset + 2] = 0;
+        png.data[offset + 3] = 255;
+      }
+      await writeFile(actual, PNG.sync.write(png));
+
+      const report = await runMockPipeline(parseRuntimeRequest(sample), {
+        artifactRoot: tempDir,
+        width: 32,
+        height: 48,
+        actualScreenshotPath: actual,
+        sandboxGeneratedFile: path.join(tempDir, "Generated.swift")
+      });
+
+      assert.equal(report.status, "failed");
+      assert.match(report.errors[0]?.message, /below threshold/);
+      assert.equal(report.steps.find((step) => step.step === "diff")?.status, "failed");
+      assert.match(report.steps.find((step) => step.step === "diff")?.reason ?? "", /below threshold/);
+    } finally {
+      await rm(tempDir, { recursive: true, force: true });
+    }
+  });
 });

@@ -99,10 +99,20 @@ export async function runMockPipeline(
     errors.push(error);
     steps.push({ step: "diff", status: "failed", reason: error.message });
   } else if (diffReport) {
+    const diffError = diffReport.passed
+      ? undefined
+      : toRuntimeError(
+          "diff",
+          `visual diff score ${diffReport.score} is below threshold ${diffReport.threshold}`
+        );
+    if (diffError) {
+      errors.push(diffError);
+    }
     steps.push({
       step: "diff",
-      status: "completed",
-      artifactPath: paths.primaryDiffReport
+      status: diffReport.passed ? "completed" : "failed",
+      artifactPath: paths.primaryDiffReport,
+      ...(diffError ? { reason: diffError.message } : {})
     });
   } else {
     steps.push({
