@@ -41,6 +41,7 @@ selected_runtime_identifier=""
 selected_udid=""
 selected_state=""
 xcode_destination=""
+screenshot_captured="false"
 
 mkdir -p "$screenshots_dir"
 
@@ -88,6 +89,7 @@ write_report() {
   export VIEWFOUNDRY_SELECTED_RUNTIME_IDENTIFIER="$selected_runtime_identifier"
   export VIEWFOUNDRY_SELECTED_UDID="$selected_udid"
   export VIEWFOUNDRY_SELECTED_STATE="$selected_state"
+  export VIEWFOUNDRY_SCREENSHOT_CAPTURED="$screenshot_captured"
   export VIEWFOUNDRY_XCODE_DESTINATION="$xcode_destination"
 
   node <<'NODE'
@@ -95,6 +97,7 @@ const fs = require("fs");
 
 const env = process.env;
 const status = env.VIEWFOUNDRY_REPORT_STATUS;
+const isPassed = status === "passed";
 const error = env.VIEWFOUNDRY_ERROR_MESSAGE
   ? {
       step: env.VIEWFOUNDRY_ERROR_STEP,
@@ -102,7 +105,7 @@ const error = env.VIEWFOUNDRY_ERROR_MESSAGE
       retryable: env.VIEWFOUNDRY_ERROR_RETRYABLE === "true"
     }
   : undefined;
-const captured = status === "captured";
+const captured = env.VIEWFOUNDRY_SCREENSHOT_CAPTURED === "true";
 const device = {
   name:
     env.VIEWFOUNDRY_SELECTED_DEVICE_NAME ||
@@ -123,15 +126,17 @@ const screenshot = captured
   : undefined;
 const finalReport = {
   runId: env.VIEWFOUNDRY_RUN_ID_VALUE,
-  status: captured ? "passed" : "failed",
-  primaryPassed: captured,
+  status: isPassed ? "passed" : "blocked",
+  primaryPassed: isPassed,
   ...(screenshot ? { primaryScreenshot: screenshot } : {}),
   smokeResults: [],
   artifactRoot: env.VIEWFOUNDRY_ARTIFACT_ROOT,
   swiftuiEntryFile: env.VIEWFOUNDRY_SWIFTUI_ENTRY_FILE,
   errors: error ? [error] : [],
-  nextActions: captured
-    ? ["Run visual diff after the diff runner exists."]
+  nextActions: isPassed
+    ? []
+    : captured
+      ? ["Run visual diff as next stage. Pass requires diffReportPath in final report."]
     : ["Fix the reported simulator runner error, then rerun the screenshot command."]
 };
 const metadata = {
@@ -426,4 +431,5 @@ if ! "$xcrun_cmd" simctl io "$selected_udid" screenshot "$screenshot_path" >>"$s
 fi
 
 captured_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-write_report "captured"
+screenshot_captured="true"
+write_report "blocked"
