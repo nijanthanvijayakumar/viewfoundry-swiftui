@@ -53,6 +53,42 @@ describe("generator IR", () => {
     );
   });
 
+  it("rejects malformed children even when siblings are valid", () => {
+    assert.throws(
+      () =>
+        parseGeneratorIR({
+          version: "generator-ir/v1",
+          targetPlatform: "ios",
+          root: {
+            kind: "vstack",
+            children: [
+              {
+                kind: "text",
+                content: "Valid",
+                textStyle: "body"
+              },
+              {
+                kind: "button",
+                label: "Missing role"
+              },
+              {
+                kind: "text",
+                content: "Missing style"
+              }
+            ]
+          }
+        }),
+      (error: unknown) => {
+        assert.ok(error instanceof GeneratorIRError);
+        assert.deepEqual(error.issues, [
+          "generatorIR.root.children.1.role must be primary",
+          "generatorIR.root.children.2.textStyle must be caption, headline, title, body"
+        ]);
+        return true;
+      }
+    );
+  });
+
   it("requires a stack root", () => {
     assert.throws(
       () =>

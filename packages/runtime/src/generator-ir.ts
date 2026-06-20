@@ -153,7 +153,12 @@ function parseTextNode(
   rejectUnknownKeys(value, allowed, path, issues);
 
   const content = readRequiredString(value.content, `${path}.content`, issues);
-  const textStyle = readTextStyle(value.textStyle, `${path}.textStyle`, issues);
+  const textStyle = readRequiredEnum(
+    value.textStyle,
+    ["caption", "headline", "title", "body"],
+    `${path}.textStyle`,
+    issues
+  ) as GeneratorIRTextStyle | undefined;
   const foregroundStyle = readForegroundStyle(value.foregroundStyle, `${path}.foregroundStyle`, issues);
   const bold = readOptionalBoolean(value.bold, `${path}.bold`, issues);
 
@@ -179,7 +184,7 @@ function parseButtonNode(
   rejectUnknownKeys(value, allowed, path, issues);
 
   const label = readRequiredString(value.label, `${path}.label`, issues);
-  const role = readEnum(value.role, ["primary"], `${path}.role`, issues);
+  const role = readRequiredEnum(value.role, ["primary"], `${path}.role`, issues);
   if (!label || !role) {
     return undefined;
   }
@@ -268,6 +273,20 @@ function readEnum(
   }
 
   return value;
+}
+
+function readRequiredEnum(
+  value: unknown,
+  allowed: readonly string[],
+  path: string,
+  issues: string[]
+): string | undefined {
+  if (value === undefined) {
+    issues.push(`${path} must be ${allowed.join(", ")}`);
+    return undefined;
+  }
+
+  return readEnum(value, allowed, path, issues);
 }
 
 function readRequiredString(value: unknown, path: string, issues: string[]): string | undefined {
