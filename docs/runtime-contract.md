@@ -155,6 +155,8 @@ final report:
 - `runId`
 - `status`
 - `primaryPassed`
+- `primaryScreenshot` when the primary screenshot was captured; passed reports
+  must include it
 - `smokeResults`
 - `artifactRoot`
 - `swiftuiEntryFile` when SwiftUI generation produced an entry file; passed
@@ -163,9 +165,10 @@ final report:
 - `errors`
 - `nextActions`
 
-Passed reports must set `primaryPassed` to `true`. Smoke results record
-`screenshotPath` for passed smoke captures. Failed smoke checks record `error`
-and `failureArtifactPath` instead of fabricating a screenshot path.
+Passed reports must set `primaryPassed` to `true` and include primary screenshot
+metadata. Smoke results record `screenshotPath` for passed smoke captures.
+Failed smoke checks record `error` and `failureArtifactPath` instead of
+fabricating a screenshot path.
 
 ## Success Rules
 

@@ -366,7 +366,7 @@
             "required": ["status"]
           },
           "then": {
-            "required": ["swiftuiEntryFile", "diffReportPath"],
+            "required": ["swiftuiEntryFile", "primaryScreenshot", "diffReportPath"],
             "properties": {
               "primaryPassed": {
                 "const": true
@@ -385,6 +385,9 @@
         },
         "primaryPassed": {
           "type": "boolean"
+        },
+        "primaryScreenshot": {
+          "$ref": "#/$defs/SimulatorScreenshotArtifact"
         },
         "smokeResults": {
           "type": "array",
