@@ -5,6 +5,10 @@ runtime package, a buildable SwiftUI sandbox project, local screenshot and
 visual diff prototypes, and a deterministic mockup stub, but no SwiftUI
 generator.
 
+The first generator fixture plan lives in
+[generator-plan.md](generator-plan.md). Generator tests should land with the
+implementation issue, not in Phase 0.
+
 ## Current Checks
 
 Run these for the TypeScript runtime:
@@ -37,6 +41,7 @@ test -f CODE_OF_CONDUCT.md
 test -f GOVERNANCE.md
 test -f .github/pull_request_template.md
 test -f docs/testing-strategy.md
+test -f docs/generator-plan.md
 test -f docs/runtime-contract.md
 test -f .gitleaks.toml
 test -f .pre-commit-config.yaml
@@ -81,6 +86,8 @@ grep -q "Create a repo skill" skills/viewfoundry/references/workflow.md
 grep -q "Update the skill" skills/viewfoundry/references/workflow.md
 grep -q "Review Handling" skills/viewfoundry/references/review-learnings.md
 grep -q "VIEWFOUNDRY_BUILD_CONFIGURATION" skills/viewfoundry/references/review-learnings.md
+grep -q "Generator Plan And Fixtures" docs/generator-plan.md
+grep -q "packages/runtime/tests/fixtures/generator" docs/generator-plan.md
 grep -q "ViewFoundryGeneratedView" examples/Sandbox/ViewFoundrySandbox/ViewFoundrySandboxApp.swift
 grep -q "Summary (Why these changes are required)?" .github/pull_request_template.md
 grep -q "What changes are in this PR" .github/pull_request_template.md
@@ -190,6 +197,22 @@ Current coverage lives in `packages/runtime/tests/unit/pipeline.test.ts` and
 covers the no-simulator path, optional diff path, CLI artifact writing, and a
 diff failure path. Real imagegen, production SwiftUI generation, and simulator
 capture remain separate future stages.
+
+## Generator Fixture Tests
+
+Do not implement the generator in Phase 0. When the generator implementation
+issue starts, add deterministic fixtures under
+`packages/runtime/tests/fixtures/generator/` as described in
+[generator-plan.md](generator-plan.md).
+
+Expected coverage:
+
+- Parse `request.json`.
+- Generate SwiftUI for the supported subset.
+- Compare `expected/ViewFoundryGeneratedView.swift` exactly.
+- Compare `expected/generation-report.json` exactly.
+- Assert unsupported request parts are reported, not dropped.
+- Keep screenshot and diff assertions outside generator unit tests.
 
 ## Image Diff Tests
 

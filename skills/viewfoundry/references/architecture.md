@@ -24,6 +24,14 @@ ViewFoundry SwiftUI is plugin-first. The plugin and skill define the operating c
   but real imagegen and production SwiftUI generation remain explicit future
   work.
 
+## Generator Phase 0
+
+The first generator boundary and fixture strategy live in
+`docs/generator-plan.md`. The next generator phase should replace only the
+mocked generation step with deterministic brief-to-view-model-to-SwiftUI output
+for a small iOS subset. Runtime request/schema shapes remain unchanged until an
+implementation issue proves a concrete gap.
+
 ## Out Of Scope Until Explicit
 
 - Real imagegen provider calls.

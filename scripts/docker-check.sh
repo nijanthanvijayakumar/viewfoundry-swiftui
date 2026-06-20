@@ -9,6 +9,7 @@ test -f SECURITY.md
 test -f CODE_OF_CONDUCT.md
 test -f GOVERNANCE.md
 test -f docs/testing-strategy.md
+test -f docs/generator-plan.md
 test -f docs/release.md
 test -f .github/pull_request_template.md
 test -f .codex-plugin/plugin.json
@@ -55,6 +56,8 @@ grep -q "Create a repo skill" skills/viewfoundry/references/workflow.md
 grep -q "Update the skill" skills/viewfoundry/references/workflow.md
 grep -q "Review Handling" skills/viewfoundry/references/review-learnings.md
 grep -q "VIEWFOUNDRY_BUILD_CONFIGURATION" skills/viewfoundry/references/review-learnings.md
+grep -q "Generator Plan And Fixtures" docs/generator-plan.md
+grep -q "packages/runtime/tests/fixtures/generator" docs/generator-plan.md
 grep -q "ViewFoundryGeneratedView" examples/Sandbox/ViewFoundrySandbox/ViewFoundrySandboxApp.swift
 grep -q "ViewFoundry Sandbox" examples/Sandbox/ViewFoundrySandbox/Generated/ViewFoundryGeneratedView.swift
 grep -q "Summary (Why these changes are required)?" .github/pull_request_template.md

@@ -14,6 +14,10 @@ The SwiftUI sandbox project is buildable now, and local screenshot, mockup
 stub, and visual diff prototypes exist. SwiftUI generation and real imagegen
 provider wiring are still future work.
 
+The first real generator boundary and fixture strategy are defined in
+[docs/generator-plan.md](docs/generator-plan.md). The plan keeps provider calls
+and production SwiftUI generation out of scope until later issues.
+
 ## V1 Scope
 
 - Define the first useful shape of the ViewFoundry SwiftUI API.
@@ -62,6 +66,7 @@ git status --short
 test -f README.md
 test -f LICENSE
 test -f docs/testing-strategy.md
+test -f docs/generator-plan.md
 test -f docs/runtime-contract.md
 test -f .gitleaks.toml
 test -f .pre-commit-config.yaml

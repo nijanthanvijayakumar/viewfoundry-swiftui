@@ -93,3 +93,9 @@ artifacts, and records completed/skipped steps in `final-report.json`.
 ## Future Generator Boundary
 
 Keep runtime parser/model/generator tests separate from screenshot verification. A passing TypeScript unit test is not a visual acceptance result.
+
+Generator implementation issues should start from `docs/generator-plan.md`.
+Keep fixture tests deterministic, update expected SwiftUI only through an
+explicit fixture refresh path, and keep provider calls, schema expansion,
+screenshot runner rewrites, and visual diff algorithm changes in separate
+issues unless the issue scope explicitly combines them.
