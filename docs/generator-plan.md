@@ -1,13 +1,13 @@
 # Generator Plan And Fixtures
 
 Phase 0 defined the first real SwiftUI generator boundary. It added a typed
-intermediate representation. The current emitter phase adds deterministic
-SwiftUI output for that first supported subset without provider calls or broad
-production codegen.
+intermediate representation. The current planner/emitter phase adds deterministic
+brief-to-IR planning and SwiftUI output for that first supported subset without
+provider calls or broad production codegen.
 
 ## Architecture
 
-The emitter replaces only the mocked generation step in
+The planner and emitter replace only the mocked generation step in
 `packages/runtime/src/pipeline.ts`. Request validation, mockup stub artifacts,
 sandbox build, screenshot capture, diffing, and final report writing keep their
 current boundaries.
@@ -15,12 +15,13 @@ current boundaries.
 Generator flow:
 
 1. Normalize the `RuntimeRequest` into a `DesignBrief`.
-2. Convert the brief into the typed generator IR.
-3. Lower the IR into plain SwiftUI source and asset metadata.
-4. Write generated files under `.viewfoundry/runs/<run-id>/swiftui/`.
-5. Copy the entry view into
+2. Validate the request/brief pair at the planner boundary.
+3. Convert the brief into the typed generator IR.
+4. Lower the IR into plain SwiftUI source and asset metadata.
+5. Write generated files under `.viewfoundry/runs/<run-id>/swiftui/`.
+6. Copy the entry view into
    `examples/Sandbox/ViewFoundrySandbox/Generated/ViewFoundryGeneratedView.swift`.
-6. Write `swiftui/generation-report.json` using the current
+7. Write `swiftui/generation-report.json` using the current
    `SwiftUIGenerationOutput` shape.
 
 The runtime contract and schema are unchanged for this phase. The existing
@@ -78,6 +79,11 @@ Unsupported request parts must be recorded in `unsupportedRequestParts`; they
 must not be silently dropped.
 
 ## Deterministic Fixtures
+
+Planner stub tests live in `packages/runtime/tests/unit/planner.test.ts`. They
+cover the sample runtime request/design brief fixture, explicit unsupported
+metadata, fallback assumptions for unmatched briefs, and invalid brief
+validation. This is the no-network stand-in for a future real planning provider.
 
 Generator IR fixtures are checked in under:
 
@@ -141,8 +147,9 @@ acceptance still requires sandbox build, screenshot, and diff evidence.
 
 ## Stubbed Vs Real
 
-Real in the current emitter phase:
+Real in the current planner/emitter phase:
 
+- Deterministic brief-to-IR planner stub.
 - Deterministic request-to-view-model lowering.
 - Deterministic SwiftUI source rendering for the supported subset.
 - Generation report metadata for assumptions and unsupported parts.

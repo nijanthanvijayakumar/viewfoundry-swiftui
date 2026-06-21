@@ -3,7 +3,7 @@
 ViewFoundry SwiftUI is still scaffold-first. Main now has a minimal TypeScript
 runtime package, a buildable SwiftUI sandbox project, local screenshot and
 visual diff prototypes, a deterministic mockup stub, and a deterministic
-SwiftUI emitter for the first generator IR subset.
+brief-to-IR planner plus SwiftUI emitter for the first generator IR subset.
 
 The generator fixture plan lives in [generator-plan.md](generator-plan.md).
 Current coverage includes generator IR parser fixtures and exact SwiftUI output
@@ -67,11 +67,13 @@ test -f packages/runtime/tsconfig.json
 test -f packages/runtime/src/index.ts
 test -f packages/runtime/src/mockup.ts
 test -f packages/runtime/src/mockup-cli.ts
+test -f packages/runtime/src/planner.ts
 test -f packages/runtime/src/pipeline.ts
 test -f packages/runtime/src/pipeline-cli.ts
 test -f packages/runtime/src/visual-diff.ts
 test -f packages/runtime/src/diff-cli.ts
 test -f packages/runtime/tests/unit/mockup.test.ts
+test -f packages/runtime/tests/unit/planner.test.ts
 test -f packages/runtime/tests/unit/pipeline.test.ts
 test -f packages/runtime/tests/unit/visual-diff.test.ts
 test -f examples/mockups/mockup.sample.json
@@ -172,10 +174,10 @@ tests never require provider secrets.
 ## Mocked End-To-End Pipeline Tests
 
 Use the mocked pipeline for the first prompt-to-report path. It validates the
-request, writes a design brief, writes mockup artifacts, lowers the request to
-the first static generator IR subset, writes deterministic SwiftUI into the
-sandbox generated view, skips simulator-only steps in CI, and writes a final
-report with completed/skipped steps.
+request, writes a design brief, writes mockup artifacts, asks the deterministic
+planner stub to lower the brief to the first static generator IR subset, writes
+deterministic SwiftUI into the sandbox generated view, skips simulator-only
+steps in CI, and writes a final report with completed/skipped steps.
 
 Current command:
 
@@ -198,6 +200,20 @@ Current coverage lives in `packages/runtime/tests/unit/pipeline.test.ts` and
 covers the no-simulator path, optional diff path, CLI artifact writing, and a
 diff failure path. Real imagegen, production SwiftUI generation, and simulator
 capture remain separate future stages.
+
+## Planner Stub Tests
+
+Use the deterministic planner stub for CI-safe coverage of the future
+brief-to-IR provider boundary. The planner accepts a validated runtime request
+and matching design brief, validates the pair, emits `generator-ir/v1`, and
+records unsupported or fallback behavior without network access.
+
+Current coverage lives in `packages/runtime/tests/unit/planner.test.ts` and
+covers the sample request fixture, unsupported request metadata, fallback
+assumptions for unmatched briefs, and invalid planner inputs.
+
+Real LLM or planning provider wiring is future work. CI must keep using the stub
+so tests never require provider secrets.
 
 ## Generator Fixture Tests
 
