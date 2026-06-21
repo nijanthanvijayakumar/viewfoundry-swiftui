@@ -181,6 +181,11 @@ final report:
 - `maxAttempts`
 - `status`
 - `lastError`
+- `feedback`; normalized no-network feedback from report errors or diff scores
+- `nextAttempt`; present only when retryable feedback exists and the loop has
+  attempts remaining
+- `stopReason`; present when the loop passed, blocked, failed, or reached
+  `maxAttempts`
 - `artifacts`
 
 `final-report.json` is the handoff artifact:
@@ -199,6 +204,8 @@ final report:
 - `swiftuiEntryFile` when SwiftUI generation produced an entry file; passed
   reports must include it
 - `diffReportPath` when the primary diff ran; passed reports must include it
+- `iterationStatePath` when an orchestrated pipeline wrote
+  `iteration-state.json`
 - `steps` when an orchestrated pipeline ran; each item includes `step`,
   `status`, and optional `artifactPath` or `reason`
 - `requestPath` when the request was persisted
@@ -251,6 +258,13 @@ when one of these happens:
 Retries must not mutate expected fixtures, delete prior attempts, or hide
 unsupported request parts. Blocked reports before SwiftUI generation must not
 fabricate `swiftuiEntryFile`.
+
+The current loop is a no-network scaffold. It can normalize report and diff
+feedback into a deterministic `nextAttempt`, but it does not call providers,
+rewrite prompts, execute auto-fixes, or claim all-device perfection. If the
+mocked pipeline has no primary screenshot or no screenshot metadata, the final
+report remains `blocked` and `primaryPassed` remains `false` even when local
+generation artifacts exist.
 
 ## Future Entry Points
 

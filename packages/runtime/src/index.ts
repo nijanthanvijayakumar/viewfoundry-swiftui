@@ -12,6 +12,12 @@ export {
   swiftStringLiteral,
   writeSwiftUIEmission
 } from "./swiftui-emitter.js";
+export {
+  DEFAULT_MAX_ATTEMPTS,
+  IterationPlanningError,
+  planIterationState
+} from "./iteration-loop.js";
+export type { PlanIterationStateInput } from "./iteration-loop.js";
 export { parseRuntimeRequest, RuntimeRequestError } from "./validation.js";
 export { comparePngImages, VisualDiffError } from "./visual-diff.js";
 export type { VisualDiffOptions } from "./visual-diff.js";
@@ -42,8 +48,11 @@ export type {
   GeneratorIRTextStyle,
   GeneratorIRVersion,
   ImagegenRequest,
+  IterationFeedback,
+  IterationFeedbackSource,
   IterationState,
   MockupArtifact,
+  NextAttemptPlan,
   RuntimeError,
   RuntimeRequest,
   RuntimeStatus,

@@ -44,6 +44,11 @@ describe("mock pipeline", () => {
       assert.equal(report.steps.find((step) => step.step === "screenshot")?.status, "skipped");
       assert.equal(report.steps.find((step) => step.step === "diff")?.status, "skipped");
       assert.equal(report.generatorIRPath, path.join(tempDir, "swiftui", "generator-ir.json"));
+      assert.equal(report.iterationStatePath, path.join(tempDir, "iteration-state.json"));
+      assert.equal(
+        JSON.parse(await readFile(path.join(tempDir, "iteration-state.json"), "utf8")).status,
+        "blocked"
+      );
       assert.equal(PNG.sync.read(await readFile(path.join(tempDir, "mockups", "target.png"))).width, 32);
       assert.equal(
         JSON.parse(await readFile(path.join(tempDir, "swiftui", "generator-ir.json"), "utf8")).version,
@@ -93,6 +98,14 @@ describe("mock pipeline", () => {
       assert.equal(report.primaryPassed, false);
       assert.equal(report.steps.find((step) => step.step === "diff")?.status, "completed");
       assert.equal(JSON.parse(await readFile(path.join(tempDir, "diffs", "primary-report.json"), "utf8")).passed, true);
+      assert.match(
+        JSON.parse(await readFile(path.join(tempDir, "iteration-state.json"), "utf8")).stopReason,
+        /screenshot metadata is unavailable/
+      );
+      assert.equal(
+        JSON.parse(await readFile(path.join(tempDir, "iteration-state.json"), "utf8")).nextAttempt,
+        undefined
+      );
     } finally {
       await rm(tempDir, { recursive: true, force: true });
     }
@@ -206,8 +219,14 @@ describe("mock pipeline", () => {
 
       assert.equal(report.status, "failed");
       assert.match(report.errors[0]?.message, /below threshold/);
+      assert.equal(report.errors[0]?.retryable, true);
       assert.equal(report.steps.find((step) => step.step === "diff")?.status, "failed");
       assert.match(report.steps.find((step) => step.step === "diff")?.reason ?? "", /below threshold/);
+      assert.equal(
+        JSON.parse(await readFile(path.join(tempDir, "iteration-state.json"), "utf8")).nextAttempt
+          .attempt,
+        2
+      );
     } finally {
       await rm(tempDir, { recursive: true, force: true });
     }

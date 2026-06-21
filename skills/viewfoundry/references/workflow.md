@@ -72,7 +72,10 @@ It uses the local mockup stub, lowers the request to the supported generator IR
 subset, writes `swiftui/generator-ir.json`, writes deterministic SwiftUI into
 the generated sandbox view, skips simulator-only steps unless later commands
 provide those artifacts, and records completed/skipped/failed steps in
-`final-report.json`.
+`final-report.json`. It also writes `iteration-state.json` with deterministic
+no-network feedback and retry planning. This scaffold can plan a next attempt
+from report or diff feedback, but it does not call providers, execute auto-fix
+prompts, or mark mocked/no-screenshot paths as passed.
 
 ## Verification Notes
 
