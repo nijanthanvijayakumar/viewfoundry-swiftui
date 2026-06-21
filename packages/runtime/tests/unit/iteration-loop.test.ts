@@ -57,6 +57,22 @@ describe("iteration loop planning", () => {
     assert.deepEqual(state.nextAttempt?.feedback.map((item) => item.step), ["diff"]);
   });
 
+  it("stops when retryable diff feedback has a non-retryable screenshot blocker", () => {
+    const state = planIterationState({
+      runId: "run-blocked",
+      attempt: 1,
+      maxAttempts: 3,
+      finalStatus: "failed",
+      diffReport: failingDiff,
+      diffReportPath: "diffs/primary-report.json",
+      screenshotAvailable: false
+    });
+
+    assert.equal(state.status, "failed");
+    assert.equal(state.nextAttempt, undefined);
+    assert.match(state.stopReason ?? "", /No primary screenshot PNG/);
+  });
+
   it("stops at max attempts without planning another retry", () => {
     const state = planIterationState({
       runId: "run-max",

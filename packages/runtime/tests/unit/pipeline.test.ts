@@ -102,6 +102,10 @@ describe("mock pipeline", () => {
         JSON.parse(await readFile(path.join(tempDir, "iteration-state.json"), "utf8")).stopReason,
         /screenshot metadata is unavailable/
       );
+      assert.equal(
+        JSON.parse(await readFile(path.join(tempDir, "iteration-state.json"), "utf8")).nextAttempt,
+        undefined
+      );
     } finally {
       await rm(tempDir, { recursive: true, force: true });
     }

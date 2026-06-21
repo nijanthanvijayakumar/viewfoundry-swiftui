@@ -54,9 +54,22 @@ export function planIterationState(input: PlanIterationStateInput): IterationSta
     };
   }
 
+  const blocker = stoppingFeedback(feedback);
+  if (blocker && !blocker.retryable) {
+    return {
+      runId: input.runId,
+      attempt,
+      maxAttempts,
+      status: input.finalStatus,
+      ...(lastError ? { lastError } : {}),
+      feedback,
+      stopReason: blocker.message,
+      artifacts: input.artifacts ?? []
+    };
+  }
+
   const retryable = feedback.filter((item) => item.retryable);
   if (retryable.length === 0) {
-    const blocker = stoppingFeedback(feedback);
     return {
       runId: input.runId,
       attempt,
