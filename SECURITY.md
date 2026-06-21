@@ -25,6 +25,11 @@ pre-commit run --all-files
 If a secret reaches remote Git, stop and remove it from branch history before
 merge. Rotate exposed credentials outside this repo.
 
+Provider-related tests and required CI must use local stubs only. Do not add
+real imagegen or planner credentials to GitHub Actions, Docker checks, fixtures,
+or checked-in run artifacts. Missing provider config errors may name missing env
+keys, but must not print configured values.
+
 ## Scope
 
 Useful reports include leaked credentials, unsafe workflow permissions,

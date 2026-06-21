@@ -37,12 +37,14 @@ test -f packages/runtime/src/index.ts
 test -f packages/runtime/src/iteration-loop.ts
 test -f packages/runtime/src/mockup.ts
 test -f packages/runtime/src/mockup-cli.ts
+test -f packages/runtime/src/providers.ts
 test -f packages/runtime/src/pipeline.ts
 test -f packages/runtime/src/pipeline-cli.ts
 test -f packages/runtime/src/visual-diff.ts
 test -f packages/runtime/src/diff-cli.ts
 test -f packages/runtime/tests/unit/iteration-loop.test.ts
 test -f packages/runtime/tests/unit/mockup.test.ts
+test -f packages/runtime/tests/unit/providers.test.ts
 test -f packages/runtime/tests/unit/pipeline.test.ts
 test -f packages/runtime/tests/unit/visual-diff.test.ts
 test -f examples/mockups/mockup.sample.json
@@ -58,6 +60,9 @@ grep -q "Create a repo skill" skills/viewfoundry/references/workflow.md
 grep -q "Update the skill" skills/viewfoundry/references/workflow.md
 grep -q "Review Handling" skills/viewfoundry/references/review-learnings.md
 grep -q "VIEWFOUNDRY_BUILD_CONFIGURATION" skills/viewfoundry/references/review-learnings.md
+grep -q "Provider Boundary Tests" docs/testing-strategy.md
+grep -q "provider network: disabled" README.md
+grep -q "local stubs only" SECURITY.md
 grep -q "Generator Plan And Fixtures" docs/generator-plan.md
 grep -q "packages/runtime/tests/fixtures/generator" docs/generator-plan.md
 grep -q "ViewFoundryGeneratedView" examples/Sandbox/ViewFoundrySandbox/ViewFoundrySandboxApp.swift

@@ -57,11 +57,13 @@ jobs:
           test -f packages/runtime/src/index.ts
           test -f packages/runtime/src/mockup.ts
           test -f packages/runtime/src/mockup-cli.ts
+          test -f packages/runtime/src/providers.ts
           test -f packages/runtime/src/pipeline.ts
           test -f packages/runtime/src/pipeline-cli.ts
           test -f packages/runtime/src/visual-diff.ts
           test -f packages/runtime/src/diff-cli.ts
           test -f packages/runtime/tests/unit/mockup.test.ts
+          test -f packages/runtime/tests/unit/providers.test.ts
           test -f packages/runtime/tests/unit/pipeline.test.ts
           test -f packages/runtime/tests/unit/visual-diff.test.ts
           test -f examples/mockups/mockup.sample.json
@@ -78,6 +80,9 @@ jobs:
           grep -q "Update the skill" skills/viewfoundry/references/workflow.md
           grep -q "Review Handling" skills/viewfoundry/references/review-learnings.md
           grep -q "VIEWFOUNDRY_BUILD_CONFIGURATION" skills/viewfoundry/references/review-learnings.md
+          grep -q "Provider Boundary Tests" docs/testing-strategy.md
+          grep -q "provider network: disabled" README.md
+          grep -q "local stubs only" SECURITY.md
           grep -q "Summary (Why these changes are required)?" .github/pull_request_template.md
           grep -q "What changes are in this PR" .github/pull_request_template.md
           grep -q "Testing details" .github/pull_request_template.md

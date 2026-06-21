@@ -68,6 +68,7 @@ test -f packages/runtime/src/index.ts
 test -f packages/runtime/src/iteration-loop.ts
 test -f packages/runtime/src/mockup.ts
 test -f packages/runtime/src/mockup-cli.ts
+test -f packages/runtime/src/providers.ts
 test -f packages/runtime/src/planner.ts
 test -f packages/runtime/src/pipeline.ts
 test -f packages/runtime/src/pipeline-cli.ts
@@ -75,6 +76,7 @@ test -f packages/runtime/src/visual-diff.ts
 test -f packages/runtime/src/diff-cli.ts
 test -f packages/runtime/tests/unit/iteration-loop.test.ts
 test -f packages/runtime/tests/unit/mockup.test.ts
+test -f packages/runtime/tests/unit/providers.test.ts
 test -f packages/runtime/tests/unit/planner.test.ts
 test -f packages/runtime/tests/unit/pipeline.test.ts
 test -f packages/runtime/tests/unit/visual-diff.test.ts
@@ -172,6 +174,26 @@ behavior.
 
 Real imagegen provider wiring is future work. CI must keep using the stub so
 tests never require provider secrets.
+
+## Provider Boundary Tests
+
+Provider contracts live in `packages/runtime/src/providers.ts`. They define the
+future imagegen and planner integration boundary, but expose only local test
+doubles today.
+
+Current coverage lives in `packages/runtime/tests/unit/providers.test.ts` and
+covers:
+
+- default local-stub config with no env requirements
+- future provider config validation by env key name
+- missing config errors that do not leak env values
+- CI no-network policy checks
+- local imagegen and planner test doubles
+
+Required CI and Docker checks must not set provider credentials, enable provider
+network access, or call real imagegen/LLM providers. Future real-provider tests
+must be opt-in and kept outside required CI until a separate issue promotes
+them.
 
 ## Mocked End-To-End Pipeline Tests
 
