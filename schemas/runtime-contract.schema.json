@@ -289,6 +289,66 @@
         }
       }
     },
+    "IterationFeedback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "step", "message", "retryable"],
+      "properties": {
+        "source": {
+          "type": "string",
+          "enum": ["diff", "report"]
+        },
+        "step": {
+          "type": "string",
+          "enum": ["request", "imagegen", "generation", "build", "screenshot", "diff", "report"]
+        },
+        "message": {
+          "type": "string"
+        },
+        "retryable": {
+          "type": "boolean"
+        },
+        "score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "threshold": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "artifactPath": {
+          "type": "string"
+        }
+      }
+    },
+    "NextAttemptPlan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["attempt", "reason", "actions", "feedback"],
+      "properties": {
+        "attempt": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "reason": {
+          "type": "string"
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "feedback": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/IterationFeedback"
+          }
+        }
+      }
+    },
     "PipelineStepReport": {
       "type": "object",
       "additionalProperties": false,
@@ -332,6 +392,18 @@
         },
         "lastError": {
           "$ref": "#/$defs/RuntimeError"
+        },
+        "feedback": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/IterationFeedback"
+          }
+        },
+        "nextAttempt": {
+          "$ref": "#/$defs/NextAttemptPlan"
+        },
+        "stopReason": {
+          "type": "string"
         },
         "artifacts": {
           "type": "array",
@@ -457,6 +529,9 @@
           "type": "string"
         },
         "diffReportPath": {
+          "type": "string"
+        },
+        "iterationStatePath": {
           "type": "string"
         },
         "steps": {

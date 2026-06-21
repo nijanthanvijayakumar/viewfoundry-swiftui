@@ -156,12 +156,34 @@ export interface RuntimeError {
   retryable: boolean;
 }
 
+export type IterationFeedbackSource = "diff" | "report";
+
+export interface IterationFeedback {
+  source: IterationFeedbackSource;
+  step: RuntimeStep;
+  message: string;
+  retryable: boolean;
+  score?: number;
+  threshold?: number;
+  artifactPath?: string;
+}
+
+export interface NextAttemptPlan {
+  attempt: number;
+  reason: string;
+  actions: string[];
+  feedback: IterationFeedback[];
+}
+
 export interface IterationState {
   runId: string;
   attempt: number;
   maxAttempts: number;
   status: "running" | RuntimeStatus;
   lastError?: RuntimeError;
+  feedback?: IterationFeedback[];
+  nextAttempt?: NextAttemptPlan;
+  stopReason?: string;
   artifacts?: FileArtifact[];
 }
 
@@ -187,6 +209,7 @@ export interface FinalReport {
   artifactRoot: string;
   swiftuiEntryFile?: string;
   diffReportPath?: string;
+  iterationStatePath?: string;
   errors: RuntimeError[];
   nextActions?: string[];
 }

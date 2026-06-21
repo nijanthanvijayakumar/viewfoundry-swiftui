@@ -4,11 +4,13 @@ import { createArtifactPaths } from "./artifacts.js";
 import { createMockupStub } from "./mockup.js";
 import { createRunId } from "./placeholder.js";
 import { planGeneratorIRFromBrief } from "./planner.js";
+import { DEFAULT_MAX_ATTEMPTS, planIterationState } from "./iteration-loop.js";
 import { writeSwiftUIEmission } from "./swiftui-emitter.js";
 import { parseRuntimeRequest } from "./validation.js";
 import { comparePngImages, VisualDiffError } from "./visual-diff.js";
 import type {
   DesignBrief,
+  FileArtifact,
   FinalReport,
   RuntimeError,
   RuntimeRequest,
@@ -31,6 +33,8 @@ export interface MockPipelineOptions {
   height?: number;
   actualScreenshotPath?: string;
   sandboxGeneratedFile?: string;
+  attempt?: number;
+  maxAttempts?: number;
 }
 
 export interface MockPipelineReport extends FinalReport {
@@ -39,6 +43,7 @@ export interface MockPipelineReport extends FinalReport {
   designBriefPath: string;
   mockupPath: string;
   targetImagePath: string;
+  iterationStatePath: string;
   generatorIRPath?: string;
   generationReportPath?: string;
 }
@@ -96,8 +101,11 @@ export async function runMockPipeline(
       errors,
       steps,
       paths,
-      includeGeneratorIRPath: generatorIRWritten
+      includeGeneratorIRPath: generatorIRWritten,
+      attempt: options.attempt,
+      maxAttempts: options.maxAttempts
     });
+    await writeIterationState(report, undefined, paths, options);
     await writeFile(paths.finalReport, `${JSON.stringify(report, null, 2)}\n`);
     return undefined;
   });
@@ -133,7 +141,8 @@ export async function runMockPipeline(
       ? undefined
       : toRuntimeError(
           "diff",
-          `visual diff score ${diffReport.score} is below threshold ${diffReport.threshold}`
+          `visual diff score ${diffReport.score} is below threshold ${diffReport.threshold}`,
+          true
         );
     if (diffError) {
       errors.push(diffError);
@@ -161,9 +170,12 @@ export async function runMockPipeline(
     steps,
     paths,
     generation,
-    diffReport
+    diffReport,
+    attempt: options.attempt,
+    maxAttempts: options.maxAttempts
   });
 
+  await writeIterationState(report, diffReport, paths, options);
   await writeFile(paths.finalReport, `${JSON.stringify(report, null, 2)}\n`);
   return report;
 }
@@ -203,6 +215,8 @@ interface CreateReportInput {
   includeGeneratorIRPath?: boolean;
   generation?: Awaited<ReturnType<typeof runGenerationStep>>;
   diffReport?: VisualDiffReport | VisualDiffError;
+  attempt?: number;
+  maxAttempts?: number;
 }
 
 function createReport(input: CreateReportInput): MockPipelineReport {
@@ -218,6 +232,7 @@ function createReport(input: CreateReportInput): MockPipelineReport {
     ...(input.diffReport && !(input.diffReport instanceof VisualDiffError)
       ? { diffReportPath: input.paths.primaryDiffReport }
       : {}),
+    iterationStatePath: input.paths.iterationState,
     errors: input.errors,
     nextActions: createNextActions(input.status),
     steps: input.steps,
@@ -227,6 +242,41 @@ function createReport(input: CreateReportInput): MockPipelineReport {
     targetImagePath: input.paths.targetImage,
     ...(input.generation ? { generationReportPath: input.paths.generationReport } : {})
   };
+}
+
+async function writeIterationState(
+  report: MockPipelineReport,
+  diffReport: VisualDiffReport | VisualDiffError | undefined,
+  paths: ReturnType<typeof createArtifactPaths>,
+  options: MockPipelineOptions
+): Promise<void> {
+  const state = planIterationState({
+    runId: report.runId,
+    attempt: options.attempt,
+    maxAttempts: options.maxAttempts ?? DEFAULT_MAX_ATTEMPTS,
+    finalStatus: report.status,
+    errors: report.errors,
+    diffReport: diffReport instanceof VisualDiffError ? undefined : diffReport,
+    diffReportPath: report.diffReportPath,
+    screenshotAvailable: Boolean(options.actualScreenshotPath),
+    artifacts: reportArtifacts(report)
+  });
+
+  await writeFile(paths.iterationState, `${JSON.stringify(state, null, 2)}\n`);
+}
+
+function reportArtifacts(report: MockPipelineReport): FileArtifact[] {
+  return [
+    { path: report.requestPath, role: "request" },
+    { path: report.designBriefPath, role: "design-brief" },
+    { path: report.mockupPath, role: "mockup" },
+    { path: report.targetImagePath, role: "target-image" },
+    ...(report.generatorIRPath ? [{ path: report.generatorIRPath, role: "generator-ir" }] : []),
+    ...(report.generationReportPath ? [{ path: report.generationReportPath, role: "generation-report" }] : []),
+    ...(report.diffReportPath ? [{ path: report.diffReportPath, role: "diff-report" }] : []),
+    { path: report.iterationStatePath, role: "iteration-state" },
+    { path: path.join(report.artifactRoot, "final-report.json"), role: "final-report" }
+  ];
 }
 
 function errorMessage(error: unknown): string {
@@ -286,10 +336,10 @@ function createNextActions(status: MockPipelineReport["status"]): string[] {
   ];
 }
 
-function toRuntimeError(step: RuntimeStep, message: string): RuntimeError {
+function toRuntimeError(step: RuntimeStep, message: string, retryable = false): RuntimeError {
   return {
     step,
     message,
-    retryable: false
+    retryable
   };
 }

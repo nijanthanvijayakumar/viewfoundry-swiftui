@@ -65,6 +65,7 @@ test -f scripts/capture-sandbox-screenshot.sh
 test -f packages/runtime/package.json
 test -f packages/runtime/tsconfig.json
 test -f packages/runtime/src/index.ts
+test -f packages/runtime/src/iteration-loop.ts
 test -f packages/runtime/src/mockup.ts
 test -f packages/runtime/src/mockup-cli.ts
 test -f packages/runtime/src/planner.ts
@@ -72,6 +73,7 @@ test -f packages/runtime/src/pipeline.ts
 test -f packages/runtime/src/pipeline-cli.ts
 test -f packages/runtime/src/visual-diff.ts
 test -f packages/runtime/src/diff-cli.ts
+test -f packages/runtime/tests/unit/iteration-loop.test.ts
 test -f packages/runtime/tests/unit/mockup.test.ts
 test -f packages/runtime/tests/unit/planner.test.ts
 test -f packages/runtime/tests/unit/pipeline.test.ts
@@ -201,6 +203,13 @@ Current coverage lives in `packages/runtime/tests/unit/pipeline.test.ts` and
 covers the no-simulator path, optional diff path, CLI artifact writing, and a
 generation and diff failure path. Real imagegen, production SwiftUI generation,
 and simulator capture remain separate future stages.
+
+The no-network iteration loop scaffold lives in
+`packages/runtime/src/iteration-loop.ts`. Unit coverage in
+`packages/runtime/tests/unit/iteration-loop.test.ts` covers primary pass
+stopping, retry planning from diff feedback, max-attempt stopping, and invalid
+feedback rejection. Pipeline tests also assert that `iteration-state.json` is
+written and that screenshot-missing reports stay blocked instead of passing.
 
 ## Planner Stub Tests
 
