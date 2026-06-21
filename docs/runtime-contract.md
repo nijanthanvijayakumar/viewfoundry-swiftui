@@ -23,10 +23,9 @@ App Intents unless Siri, Shortcuts, Spotlight, widgets, or Control Center
 actions are explicitly in scope.
 
 The first generator plan is documented in
-[generator-plan.md](generator-plan.md). Phase 0 does not change this request
-schema or artifact shape; the next generator phase should keep using the
-current `SwiftUIGenerationOutput` fields unless implementation proves a schema
-gap.
+[generator-plan.md](generator-plan.md). The current emitter keeps this request
+schema and artifact shape, using the existing `SwiftUIGenerationOutput` fields
+unless implementation proves a schema gap.
 
 ## Local Artifact Root
 

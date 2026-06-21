@@ -1,6 +1,13 @@
 export { createArtifactPaths } from "./artifacts.js";
 export { createRunId, runViewFoundryPlaceholder } from "./placeholder.js";
 export { parseGeneratorIR, GeneratorIRError } from "./generator-ir.js";
+export {
+  createGeneratorIRFromRuntimeRequest,
+  emitSwiftUI,
+  SwiftUIEmitterError,
+  swiftStringLiteral,
+  writeSwiftUIEmission
+} from "./swiftui-emitter.js";
 export { parseRuntimeRequest, RuntimeRequestError } from "./validation.js";
 export { comparePngImages, VisualDiffError } from "./visual-diff.js";
 export type { VisualDiffOptions } from "./visual-diff.js";

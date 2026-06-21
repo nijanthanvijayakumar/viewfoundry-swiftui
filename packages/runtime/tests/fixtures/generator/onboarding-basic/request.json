@@ -1,0 +1,39 @@
+{
+  "version": "generator-ir/v1",
+  "targetPlatform": "ios",
+  "root": {
+    "kind": "zstack",
+    "background": "systemBackground",
+    "ignoresSafeArea": true,
+    "children": [
+      {
+        "kind": "vstack",
+        "alignment": "leading",
+        "spacing": 16,
+        "padding": 24,
+        "children": [
+          {
+            "kind": "text",
+            "content": "Habit rhythm",
+            "textStyle": "title",
+            "bold": true
+          },
+          {
+            "kind": "text",
+            "content": "Set a simple streak goal before your first check-in.",
+            "textStyle": "body",
+            "foregroundStyle": "secondary"
+          },
+          {
+            "kind": "button",
+            "label": "Start",
+            "role": "primary"
+          }
+        ]
+      }
+    ]
+  },
+  "assumptions": [
+    "Static onboarding copy only."
+  ]
+}

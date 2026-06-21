@@ -7,16 +7,17 @@ struct ViewFoundryGeneratedView: View {
                 .ignoresSafeArea()
 
             VStack(alignment: .leading, spacing: 16) {
-                Text("ViewFoundry Sandbox")
-                    .font(.caption.bold())
-                    .foregroundStyle(.secondary)
-
-                Text("Build a compact onboarding screen for a habit tracker.")
+                Text("Habit rhythm")
                     .font(.title.bold())
 
-                Text("iPhone 16 / iOS 18 / light")
+                Text("Set a simple streak goal before your first check-in.")
                     .font(.body)
                     .foregroundStyle(.secondary)
+
+                Button(action: {}) {
+                    Text("Start")
+                }
+                .buttonStyle(.borderedProminent)
             }
             .padding(24)
         }

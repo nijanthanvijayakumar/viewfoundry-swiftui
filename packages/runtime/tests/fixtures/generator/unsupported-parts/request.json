@@ -1,0 +1,31 @@
+{
+  "version": "generator-ir/v1",
+  "targetPlatform": "ios",
+  "root": {
+    "kind": "vstack",
+    "alignment": "center",
+    "spacing": 10,
+    "padding": 18,
+    "children": [
+      {
+        "kind": "text",
+        "content": "Unsupported request parts",
+        "textStyle": "headline",
+        "bold": true
+      },
+      {
+        "kind": "text",
+        "content": "Rendered with static fallback copy.",
+        "textStyle": "body",
+        "foregroundStyle": "secondary"
+      }
+    ]
+  },
+  "unsupportedRequestParts": [
+    "remote images",
+    "scrolling list"
+  ],
+  "assumptions": [
+    "Unsupported parts are reported and not emitted."
+  ]
+}

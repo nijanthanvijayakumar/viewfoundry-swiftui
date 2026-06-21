@@ -1,0 +1,39 @@
+{
+  "version": "generator-ir/v1",
+  "targetPlatform": "ios",
+  "root": {
+    "kind": "vstack",
+    "alignment": "leading",
+    "spacing": 12,
+    "padding": 20,
+    "background": "secondarySystemBackground",
+    "children": [
+      {
+        "kind": "sfSymbol",
+        "systemName": "slider.horizontal.3",
+        "textStyle": "title",
+        "foregroundStyle": "secondary"
+      },
+      {
+        "kind": "text",
+        "content": "Settings",
+        "textStyle": "headline",
+        "bold": true
+      },
+      {
+        "kind": "text",
+        "content": "Notifications",
+        "textStyle": "body"
+      },
+      {
+        "kind": "text",
+        "content": "Daily summary",
+        "textStyle": "caption",
+        "foregroundStyle": "secondary"
+      }
+    ]
+  },
+  "assumptions": [
+    "Dense settings content stays static and non-scrolling."
+  ]
+}

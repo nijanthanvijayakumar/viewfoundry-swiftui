@@ -68,9 +68,10 @@ Current mocked command:
 npm run pipeline:mock -- --input examples/runtime-request.sample.json --output .viewfoundry/runs/sample
 ```
 
-It uses the local mockup stub, writes placeholder SwiftUI into the generated
-sandbox view, skips simulator-only steps unless later commands provide those
-artifacts, and records completed/skipped steps in `final-report.json`.
+It uses the local mockup stub, lowers the request to the supported generator IR
+subset, writes deterministic SwiftUI into the generated sandbox view, skips
+simulator-only steps unless later commands provide those artifacts, and records
+completed/skipped steps in `final-report.json`.
 
 ## Verification Notes
 

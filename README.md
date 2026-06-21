@@ -216,9 +216,9 @@ Artifacts:
 - `.viewfoundry/runs/<run>/swiftui/generation-report.json`
 - `.viewfoundry/runs/<run>/final-report.json`
 
-The mocked pipeline writes deterministic placeholder SwiftUI into the sandbox
-generated view, skips simulator-only steps in CI, and records completed/skipped
-steps with reasons in the final report.
+The mocked pipeline writes deterministic SwiftUI for the first generator IR
+subset into the sandbox generated view, skips simulator-only steps in CI, and
+records completed/skipped steps with reasons in the final report.
 
 Compare a mockup PNG to a captured screenshot PNG:
 

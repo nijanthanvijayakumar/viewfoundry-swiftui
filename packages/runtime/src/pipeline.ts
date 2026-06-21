@@ -1,8 +1,8 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
-import path from "node:path";
 import { createArtifactPaths } from "./artifacts.js";
 import { createMockupStub } from "./mockup.js";
 import { createRunId } from "./placeholder.js";
+import { createGeneratorIRFromRuntimeRequest, writeSwiftUIEmission } from "./swiftui-emitter.js";
 import { parseRuntimeRequest } from "./validation.js";
 import { comparePngImages, VisualDiffError } from "./visual-diff.js";
 import type {
@@ -10,7 +10,6 @@ import type {
   RuntimeError,
   RuntimeRequest,
   RuntimeStep,
-  SwiftUIGenerationOutput,
   VisualDiffReport
 } from "./types.js";
 
@@ -72,7 +71,7 @@ export async function runMockPipeline(
   });
   steps.push({ step: "imagegen", status: "completed", artifactPath: paths.mockup });
 
-  const generation = await writePlaceholderSwiftUI(request, {
+  const generation = await writeSwiftUIEmission(createGeneratorIRFromRuntimeRequest(request), {
     artifactRoot,
     sandboxGeneratedFile: options.sandboxGeneratedFile ?? defaultSandboxGeneratedFile
   });
@@ -146,39 +145,6 @@ export async function runMockPipeline(
   return report;
 }
 
-async function writePlaceholderSwiftUI(
-  request: RuntimeRequest,
-  options: { artifactRoot: string; sandboxGeneratedFile: string }
-): Promise<SwiftUIGenerationOutput> {
-  const paths = createArtifactPaths(options.artifactRoot);
-  const artifactEntryFile = path.join(paths.swiftuiSources, "ViewFoundryGeneratedView.swift");
-  const source = createSwiftUISource(request);
-  const report: SwiftUIGenerationOutput = {
-    entryFile: artifactEntryFile,
-    sourceFiles: [{ path: artifactEntryFile, role: "generated-swiftui" }],
-    assetFiles: [],
-    unsupportedRequestParts: [
-      "Real SwiftUI generation is not implemented; this is a deterministic placeholder."
-    ],
-    assumptions: [
-      "The prompt summary is represented as static SwiftUI text.",
-      "Generated output is isolated to the sandbox generated view."
-    ]
-  };
-
-  await Promise.all([
-    mkdir(paths.swiftuiSources, { recursive: true }),
-    mkdir(path.dirname(options.sandboxGeneratedFile), { recursive: true })
-  ]);
-  await Promise.all([
-    writeFile(artifactEntryFile, source),
-    writeFile(options.sandboxGeneratedFile, source),
-    writeFile(paths.generationReport, `${JSON.stringify(report, null, 2)}\n`)
-  ]);
-
-  return report;
-}
-
 async function maybeRunDiff(
   targetPath: string,
   actualPath: string | undefined,
@@ -238,71 +204,4 @@ function toRuntimeError(step: RuntimeStep, message: string): RuntimeError {
     message,
     retryable: false
   };
-}
-
-function createSwiftUISource(request: RuntimeRequest): string {
-  const title = swiftStringLiteral(request.prompt);
-  const device = swiftStringLiteral(
-    [
-      request.primaryDevice.name,
-      request.primaryDevice.os,
-      request.primaryDevice.appearance
-    ]
-      .filter(Boolean)
-      .join(" / ")
-  );
-
-  return `import SwiftUI
-
-struct ViewFoundryGeneratedView: View {
-    var body: some View {
-        ZStack {
-            Color(.systemBackground)
-                .ignoresSafeArea()
-
-            VStack(alignment: .leading, spacing: 16) {
-                Text("ViewFoundry Sandbox")
-                    .font(.caption.bold())
-                    .foregroundStyle(.secondary)
-
-                Text(${title})
-                    .font(.title.bold())
-
-                Text("Mocked ViewFoundry pipeline output")
-                    .font(.headline)
-                    .foregroundStyle(.secondary)
-
-                Text(${device})
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            }
-            .padding(24)
-        }
-    }
-}
-`;
-}
-
-function swiftStringLiteral(value: string): string {
-  let literal = "\"";
-
-  for (const character of value) {
-    const codePoint = character.codePointAt(0);
-    if (codePoint === undefined) {
-      continue;
-    }
-
-    if (character === "\"") {
-      literal += "\\\"";
-    } else if (character === "\\") {
-      literal += "\\\\";
-    } else if (codePoint < 0x20 || codePoint === 0x7f || codePoint === 0x2028 || codePoint === 0x2029) {
-      literal += `\\u{${codePoint.toString(16)}}`;
-    } else {
-      literal += character;
-    }
-  }
-
-  literal += "\"";
-  return literal;
 }

@@ -1,0 +1,13 @@
+{
+  "entryFile": ".viewfoundry/runs/fixture/swiftui/Sources/ViewFoundryGeneratedView.swift",
+  "sourceFiles": [
+    {
+      "path": ".viewfoundry/runs/fixture/swiftui/Sources/ViewFoundryGeneratedView.swift",
+      "role": "generated-swiftui"
+    }
+  ],
+  "assetFiles": [],
+  "assumptions": [
+    "Dense settings content stays static and non-scrolling."
+  ]
+}

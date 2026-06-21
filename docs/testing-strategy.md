@@ -2,13 +2,12 @@
 
 ViewFoundry SwiftUI is still scaffold-first. Main now has a minimal TypeScript
 runtime package, a buildable SwiftUI sandbox project, local screenshot and
-visual diff prototypes, and a deterministic mockup stub, but no SwiftUI
-generator.
+visual diff prototypes, a deterministic mockup stub, and a deterministic
+SwiftUI emitter for the first generator IR subset.
 
-The first generator fixture plan lives in
-[generator-plan.md](generator-plan.md). Phase 0 includes generator IR parser
-fixtures only; SwiftUI output fixture tests land with the generator emission
-issue.
+The generator fixture plan lives in [generator-plan.md](generator-plan.md).
+Current coverage includes generator IR parser fixtures and exact SwiftUI output
+fixtures for the first emitter subset.
 
 ## Current Checks
 
@@ -173,9 +172,10 @@ tests never require provider secrets.
 ## Mocked End-To-End Pipeline Tests
 
 Use the mocked pipeline for the first prompt-to-report path. It validates the
-request, writes a design brief, writes mockup artifacts, writes placeholder
-SwiftUI into the sandbox generated view, skips simulator-only steps in CI, and
-writes a final report with completed/skipped steps.
+request, writes a design brief, writes mockup artifacts, lowers the request to
+the first static generator IR subset, writes deterministic SwiftUI into the
+sandbox generated view, skips simulator-only steps in CI, and writes a final
+report with completed/skipped steps.
 
 Current command:
 
@@ -201,7 +201,7 @@ capture remain separate future stages.
 
 ## Generator Fixture Tests
 
-Phase 0 validates typed generator IR fixtures under
+Generator IR parsing validates typed fixtures under
 `packages/runtime/tests/fixtures/generator-ir/`.
 
 Current coverage:
@@ -211,8 +211,7 @@ Current coverage:
 - Reject unsupported layout and component structures.
 - Reject non-stack roots.
 
-Do not implement SwiftUI emission in Phase 0. When the generator emission issue
-starts, add deterministic fixtures under
+SwiftUI emitter fixtures live under
 `packages/runtime/tests/fixtures/generator/` as described in
 [generator-plan.md](generator-plan.md).
 

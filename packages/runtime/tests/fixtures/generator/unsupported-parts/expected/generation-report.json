@@ -1,0 +1,17 @@
+{
+  "entryFile": ".viewfoundry/runs/fixture/swiftui/Sources/ViewFoundryGeneratedView.swift",
+  "sourceFiles": [
+    {
+      "path": ".viewfoundry/runs/fixture/swiftui/Sources/ViewFoundryGeneratedView.swift",
+      "role": "generated-swiftui"
+    }
+  ],
+  "assetFiles": [],
+  "unsupportedRequestParts": [
+    "remote images",
+    "scrolling list"
+  ],
+  "assumptions": [
+    "Unsupported parts are reported and not emitted."
+  ]
+}

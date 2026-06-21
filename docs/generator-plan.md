@@ -1,12 +1,13 @@
 # Generator Plan And Fixtures
 
-Phase 0 defines the first real SwiftUI generator boundary. It adds a typed
-intermediate representation, but does not implement generation, provider calls,
-or production SwiftUI output.
+Phase 0 defined the first real SwiftUI generator boundary. It added a typed
+intermediate representation. The current emitter phase adds deterministic
+SwiftUI output for that first supported subset without provider calls or broad
+production codegen.
 
 ## Architecture
 
-The next generator phase should replace only the mocked generation step in
+The emitter replaces only the mocked generation step in
 `packages/runtime/src/pipeline.ts`. Request validation, mockup stub artifacts,
 sandbox build, screenshot capture, diffing, and final report writing keep their
 current boundaries.
@@ -140,7 +141,7 @@ acceptance still requires sandbox build, screenshot, and diff evidence.
 
 ## Stubbed Vs Real
 
-Real in the next phase:
+Real in the current emitter phase:
 
 - Deterministic request-to-view-model lowering.
 - Deterministic SwiftUI source rendering for the supported subset.
