@@ -3,6 +3,10 @@ export { createRunId, runViewFoundryPlaceholder } from "./placeholder.js";
 export { parseGeneratorIR, GeneratorIRError } from "./generator-ir.js";
 export {
   createGeneratorIRFromRuntimeRequest,
+  planGeneratorIRFromBrief,
+  PlannerError
+} from "./planner.js";
+export {
   emitSwiftUI,
   SwiftUIEmitterError,
   swiftStringLiteral,

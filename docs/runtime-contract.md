@@ -12,6 +12,7 @@ V1 promises a local, inspectable design-to-SwiftUI sandbox loop:
 - accept one structured runtime request
 - create one design brief from the request
 - create or receive one imagegen mockup artifact
+- plan the design brief into the supported generator IR subset
 - generate plain SwiftUI files and local assets
 - run pixel verification on one primary simulator/device target
 - run optional extra-device smoke checks only after the primary target passes
@@ -138,6 +139,12 @@ generation exists:
 
 The local stub writes this metadata plus a deterministic placeholder PNG. It
 must not require API keys or call a real image generation provider.
+
+The deterministic planner stub records the future planning provider boundary. It
+accepts the validated runtime request plus `design-brief.json`, validates that
+they match, emits `generator-ir/v1`, and records unsupported or fallback behavior
+through `unsupportedRequestParts` and `assumptions`. It must not require API
+keys or call a real LLM/planning provider.
 
 `swiftui/generation-report.json` records generated output:
 

@@ -2,7 +2,8 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { createArtifactPaths } from "./artifacts.js";
 import { createMockupStub } from "./mockup.js";
 import { createRunId } from "./placeholder.js";
-import { createGeneratorIRFromRuntimeRequest, writeSwiftUIEmission } from "./swiftui-emitter.js";
+import { planGeneratorIRFromBrief } from "./planner.js";
+import { writeSwiftUIEmission } from "./swiftui-emitter.js";
 import { parseRuntimeRequest } from "./validation.js";
 import { comparePngImages, VisualDiffError } from "./visual-diff.js";
 import type {
@@ -64,14 +65,17 @@ export async function runMockPipeline(
   await writeFile(paths.request, `${JSON.stringify(request, null, 2)}\n`);
   steps.push({ step: "request", status: "completed", artifactPath: paths.request });
 
-  await createMockupStub(request, {
+  const mockupResult = await createMockupStub(request, {
     artifactRoot,
     width: options.width,
     height: options.height
   });
   steps.push({ step: "imagegen", status: "completed", artifactPath: paths.mockup });
 
-  const generation = await writeSwiftUIEmission(createGeneratorIRFromRuntimeRequest(request), {
+  const generation = await writeSwiftUIEmission(planGeneratorIRFromBrief({
+    request,
+    designBrief: mockupResult.designBrief
+  }), {
     artifactRoot,
     sandboxGeneratedFile: options.sandboxGeneratedFile ?? defaultSandboxGeneratedFile
   });

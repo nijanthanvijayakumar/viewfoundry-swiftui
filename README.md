@@ -9,10 +9,10 @@ skill scaffold that will guide sandbox work before codegen lands.
 
 The future runner contract is documented in
 [docs/runtime-contract.md](docs/runtime-contract.md). The current runtime is a
-placeholder only; it validates requests and prints deterministic blocked output.
+small no-network scaffold; it validates requests and prints deterministic blocked output.
 The SwiftUI sandbox project is buildable now, and local screenshot, mockup
-stub, and visual diff prototypes exist. SwiftUI generation and real imagegen
-provider wiring are still future work.
+stub, planner, SwiftUI emitter, and visual diff prototypes exist. Real imagegen
+and real planning provider wiring are still future work.
 
 The first real generator boundary and fixture strategy are defined in
 [docs/generator-plan.md](docs/generator-plan.md). The plan keeps provider calls
@@ -217,8 +217,9 @@ Artifacts:
 - `.viewfoundry/runs/<run>/final-report.json`
 
 The mocked pipeline writes deterministic SwiftUI for the first generator IR
-subset into the sandbox generated view, skips simulator-only steps in CI, and
-records completed/skipped steps with reasons in the final report.
+subset by running the deterministic brief-to-IR planner stub, skips
+simulator-only steps in CI, and records completed/skipped steps with reasons in
+the final report.
 
 Compare a mockup PNG to a captured screenshot PNG:
 
@@ -238,9 +239,10 @@ PNG, and does not claim semantic or perceptual matching.
 ## Runtime Placeholder
 
 The runtime package lives at `packages/runtime`. It validates requests, writes
-deterministic mockup stub artifacts, writes mocked SwiftUI pipeline output, and
-exposes local helper CLIs. It does not call real imagegen providers or generate
-production SwiftUI yet.
+deterministic mockup stub artifacts, plans the generated design brief into the
+first generator IR subset, writes mocked SwiftUI pipeline output, and exposes
+local helper CLIs. It does not call real imagegen or planning providers, and it
+does not generate production SwiftUI yet.
 
 ```sh
 npm run build

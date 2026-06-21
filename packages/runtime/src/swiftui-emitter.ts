@@ -12,7 +12,6 @@ import type {
   GeneratorIRSystemBackground,
   GeneratorIRTextNode,
   GeneratorIRTextStyle,
-  RuntimeRequest,
   SwiftUIGenerationOutput
 } from "./types.js";
 
@@ -31,82 +30,6 @@ export interface SwiftUIEmission {
 export interface WriteSwiftUIEmissionOptions {
   artifactRoot: string;
   sandboxGeneratedFile: string;
-}
-
-export function createGeneratorIRFromRuntimeRequest(request: RuntimeRequest): GeneratorIR {
-  const device = [
-    request.primaryDevice.name,
-    request.primaryDevice.os,
-    request.primaryDevice.appearance
-  ]
-    .filter(Boolean)
-    .join(" / ");
-
-  return {
-    version: "generator-ir/v1",
-    targetPlatform: "ios",
-    root: {
-      kind: "zstack",
-      background: "systemBackground",
-      ignoresSafeArea: true,
-      children: [
-        {
-          kind: "vstack",
-          alignment: "leading",
-          spacing: 16,
-          padding: 24,
-          children: [
-            {
-              kind: "text",
-              content: "ViewFoundry Sandbox",
-              textStyle: "caption",
-              foregroundStyle: "secondary",
-              bold: true
-            },
-            {
-              kind: "text",
-              content: request.prompt,
-              textStyle: "title",
-              bold: true
-            },
-            {
-              kind: "text",
-              content: device || "Primary device unspecified",
-              textStyle: "body",
-              foregroundStyle: "secondary"
-            }
-          ]
-        }
-      ]
-    },
-    unsupportedRequestParts: createUnsupportedRequestParts(request),
-    assumptions: [
-      "Prompt text is emitted as static SwiftUI copy.",
-      "Generated output is isolated to the sandbox generated view."
-    ]
-  };
-}
-
-function createUnsupportedRequestParts(request: RuntimeRequest): string[] | undefined {
-  const unsupported: string[] = [];
-
-  if (request.smokeDevices && request.smokeDevices.length > 0) {
-    unsupported.push(
-      `smokeDevices not rendered: ${request.smokeDevices.map(formatDeviceTarget).join("; ")}`
-    );
-  }
-
-  for (const [category, values] of Object.entries(request.visualConstraints ?? {})) {
-    if (values && values.length > 0) {
-      unsupported.push(`visualConstraints.${category} not rendered: ${values.join("; ")}`);
-    }
-  }
-
-  return unsupported.length > 0 ? unsupported : undefined;
-}
-
-function formatDeviceTarget(device: RuntimeRequest["primaryDevice"]): string {
-  return [device.name, device.os, device.appearance].filter(Boolean).join(" / ");
 }
 
 export function emitSwiftUI(ir: GeneratorIR, entryFile: string): SwiftUIEmission {
