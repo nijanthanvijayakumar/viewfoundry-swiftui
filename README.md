@@ -222,6 +222,24 @@ subset by running the deterministic brief-to-IR planner stub, persists the
 planner IR and emitter report artifacts, skips simulator-only steps in CI, and
 records completed/skipped/failed steps with reasons in the final report.
 
+## Provider Boundaries
+
+Provider contracts live in `packages/runtime/src/providers.ts`. They define
+typed imagegen and planner boundaries for future integrations, but current
+commands use local stubs only.
+
+Default behavior:
+
+- `imagegen`: `stub`
+- `planner`: `stub`
+- provider network: disabled
+
+Future real-provider config may use `VIEWFOUNDRY_IMAGEGEN_PROVIDER`,
+`VIEWFOUNDRY_IMAGEGEN_API_KEY`, `VIEWFOUNDRY_PLANNER_PROVIDER`, and
+`VIEWFOUNDRY_PLANNER_API_KEY`. Missing-config errors name missing keys only and
+must not print configured values. Required CI and Docker checks must keep
+provider behavior local and no-network.
+
 Compare a mockup PNG to a captured screenshot PNG:
 
 ```sh

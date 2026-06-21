@@ -141,6 +141,25 @@ generation exists:
 The local stub writes this metadata plus a deterministic placeholder PNG. It
 must not require API keys or call a real image generation provider.
 
+Provider wiring is a typed boundary only. Current runtime config resolves to
+local stubs by default:
+
+- `imagegen.kind`: `stub`
+- `planner.kind`: `stub`
+- `allowNetwork`: `false`
+
+Future real provider config may require these env keys:
+
+- `VIEWFOUNDRY_IMAGEGEN_PROVIDER`
+- `VIEWFOUNDRY_IMAGEGEN_API_KEY`
+- `VIEWFOUNDRY_PLANNER_PROVIDER`
+- `VIEWFOUNDRY_PLANNER_API_KEY`
+
+Missing config errors may name missing keys, but must not echo configured
+provider names, API keys, token values, request prompts, or generated payloads.
+CI and Docker checks must keep provider behavior on local stubs and fail if a
+test path enables provider network access.
+
 `swiftui/generator-ir.json` records the deterministic planner artifact. The
 planner accepts the validated runtime request plus `design-brief.json`,
 validates that they match, emits `generator-ir/v1`, and records unsupported or

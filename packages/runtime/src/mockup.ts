@@ -3,6 +3,7 @@ import path from "node:path";
 import { PNG } from "pngjs";
 import { createArtifactPaths } from "./artifacts.js";
 import { createRunId } from "./placeholder.js";
+import { createStubImagegenProvider } from "./providers.js";
 import { parseRuntimeRequest } from "./validation.js";
 import type { DesignBrief, ImagegenRequest, MockupArtifact, RuntimeRequest } from "./types.js";
 
@@ -32,23 +33,17 @@ export async function createMockupStub(
 
   const paths = createArtifactPaths(artifactRoot);
   const designBrief = createDesignBrief(request);
-  const imagegenRequest = createImagegenRequest(request, {
+  const imagegenPrompt = createImagegenPrompt(request);
+  const imagegenProvider = createStubImagegenProvider();
+  const providerOutput = await imagegenProvider.createMockup({
+    request,
+    prompt: imagegenPrompt,
     width,
     height,
     outputPath: paths.targetImage,
     seed: runId
   });
-  const mockup: MockupArtifact = {
-    kind: "imagegen",
-    prompt: imagegenRequest.prompt,
-    imagePath: paths.targetImage,
-    width,
-    height,
-    notes: [
-      "Deterministic local stub; no image generation provider was called.",
-      "Replace this artifact with a provider image when imagegen integration is implemented."
-    ]
-  };
+  const { imagegenRequest, mockup } = providerOutput;
 
   await mkdir(paths.mockups, { recursive: true });
   await Promise.all([
@@ -98,13 +93,8 @@ export function createDesignBrief(request: RuntimeRequest): DesignBrief {
   };
 }
 
-function createImagegenRequest(
-  request: RuntimeRequest,
-  options: { width: number; height: number; outputPath: string; seed: string }
-): ImagegenRequest {
-  return {
-    provider: "stub",
-    prompt: [
+function createImagegenPrompt(request: RuntimeRequest): string {
+  return [
       `Create an iOS SwiftUI mockup for: ${request.prompt}`,
       [
         `Primary device: ${request.primaryDevice.name}`,
@@ -119,15 +109,7 @@ function createImagegenRequest(
       request.visualConstraints?.accessibility?.length
         ? `Accessibility: ${request.visualConstraints.accessibility.join(", ")}.`
         : "Accessibility: large tap targets."
-    ].join("\n"),
-    targetPlatform: request.targetPlatform,
-    primaryDevice: request.primaryDevice,
-    ...(request.visualConstraints ? { visualConstraints: request.visualConstraints } : {}),
-    outputPath: options.outputPath,
-    width: options.width,
-    height: options.height,
-    seed: options.seed
-  };
+    ].join("\n");
 }
 
 function validateDimensions(width: number, height: number): void {

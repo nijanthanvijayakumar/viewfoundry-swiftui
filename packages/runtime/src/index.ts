@@ -21,6 +21,27 @@ export type { PlanIterationStateInput } from "./iteration-loop.js";
 export { parseRuntimeRequest, RuntimeRequestError } from "./validation.js";
 export { comparePngImages, VisualDiffError } from "./visual-diff.js";
 export type { VisualDiffOptions } from "./visual-diff.js";
+export {
+  assertNoNetworkProviderConfig,
+  createStubImagegenProvider,
+  createStubPlannerProvider,
+  ProviderConfigError,
+  resolveProviderBoundaryConfig
+} from "./providers.js";
+export type {
+  ImagegenProvider,
+  ImagegenProviderInput,
+  ImagegenProviderKind,
+  ImagegenProviderOutput,
+  PlannerProvider,
+  PlannerProviderInput,
+  PlannerProviderKind,
+  ProviderBoundaryConfig,
+  ProviderEndpointConfig,
+  ProviderEnv,
+  ProviderMode,
+  ResolveProviderBoundaryConfigOptions
+} from "./providers.js";
 export { createDesignBrief, createMockupStub, createMockupStubFromFile } from "./mockup.js";
 export { runMockPipeline, runMockPipelineFromFile } from "./pipeline.js";
 export type { MockPipelineOptions, MockPipelineReport, PipelineStepReport } from "./pipeline.js";
