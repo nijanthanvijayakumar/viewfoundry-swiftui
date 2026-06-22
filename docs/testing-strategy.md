@@ -403,21 +403,34 @@ The PNG diff command is covered by unit tests in required CI.
 
 ## CI And Local Split
 
-Required CI:
+Required CI runs on every pull request, every push to `main`, and manual
+`workflow_dispatch` reruns. Stale pull request runs are canceled.
 
-- `npm run test:unit`
-- `tsc --noEmit`
-- `npm run sandbox:build` with an honest skip on hosts without Xcode
-- Gitleaks secret scan
-- Optional local pre-commit Gitleaks hook
-- Markdown/link checks, if added
+Automatic CI:
 
-Local-only until stabilized:
+- repo contract file and policy checks
+- `npm ci`
+- `npm run typecheck`
+- `npm test`
+- `npm run build`
+- `npm run check`
+- `npm run smoke:cli`
+- `npm run pack:dry-run`
+- `npm run secrets`
+- Gitleaks action scan
+- `pre-commit run --all-files`
+- `sh scripts/docker-check.sh`
+- workflow and release YAML checks via `npm run workflow:check`
+
+Manual-only until stabilized:
 
 - Swift sandbox `xcodebuild ... test`
 - Simulator screenshot capture
 - Simulator screenshot diff updates
-- Fixture update mode
+- fixture update mode
+- PR diff Gitleaks gate before merge:
+  `gh pr diff <PR> | gitleaks stdin --config .gitleaks.toml --redact --verbose`
+- release publishing dry-run beyond workflow syntax checks
 
 Promotion rule: move a local-only check into CI only after it is deterministic,
 documented, and does not require manual simulator cleanup.

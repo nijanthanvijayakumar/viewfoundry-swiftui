@@ -103,6 +103,14 @@ if [ -f package.json ]; then
       npm run test:image
     fi
   fi
+
+  if has_script smoke:cli; then
+    npm run smoke:cli
+  fi
+
+  if has_script pack:dry-run; then
+    npm run pack:dry-run
+  fi
 else
   echo "No package.json yet; ran scaffold checks only."
 fi

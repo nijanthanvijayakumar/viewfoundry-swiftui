@@ -5,26 +5,28 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.head.ref || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
 
 jobs:
-  scaffold:
-    name: Scaffold checks
+  repo-contract:
+    name: Repo contract
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: npm
 
       - name: Check required repo files
         run: |
@@ -36,11 +38,16 @@ jobs:
           test -f CODE_OF_CONDUCT.md
           test -f GOVERNANCE.md
           test -f .github/pull_request_template.md
+          test -f .github/workflows/ci.yml
+          test -f .github/workflows/release.yml
           test -f docs/testing-strategy.md
           test -f docs/runtime-contract.md
           test -f .gitleaks.toml
           test -f .pre-commit-config.yaml
           test -f scripts/gitleaks-check.sh
+          test -f scripts/docker-check.sh
+          test -f scripts/cli-smoke.mjs
+          test -f scripts/validate-workflows.sh
           test -f docs/release.md
           test -f .codex-plugin/plugin.json
           test -f schemas/runtime-contract.schema.json
@@ -88,17 +95,174 @@ jobs:
           grep -q "Testing details" .github/pull_request_template.md
           node -e 'for (const file of [".codex-plugin/plugin.json", "schemas/runtime-contract.schema.json"]) JSON.parse(require("fs").readFileSync(file, "utf8"))'
 
+  node-typecheck:
+    name: Node typecheck
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
       - name: Install dependencies
         run: npm ci
 
-      - name: Run TypeScript checks
+      - name: Typecheck
+        run: npm run typecheck
+
+  node-tests:
+    name: Node tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Test
+        run: npm test
+
+  build-check:
+    name: Build and check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Full safe check
         run: npm run check
 
-      - name: Run secret scan
+  package-cli-smoke:
+    name: Package and CLI smoke
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: CLI smoke
+        run: npm run smoke:cli
+
+      - name: Package dry run
+        run: npm run pack:dry-run
+
+  secrets:
+    name: Secrets
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Gitleaks
+        env:
+          GITLEAKS_VERSION: 8.28.0
+        run: |
+          mkdir -p /tmp/gitleaks
+          curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
+            -o /tmp/gitleaks/gitleaks.tar.gz
+          tar -xzf /tmp/gitleaks/gitleaks.tar.gz -C /tmp/gitleaks gitleaks
+          sudo install -m 755 /tmp/gitleaks/gitleaks /usr/local/bin/gitleaks
+
+      - name: Local secret scan
+        run: npm run secrets
+
+      - name: Gitleaks action
         uses: gitleaks/gitleaks-action@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # TODO: Add npm audit once external runtime dependencies exist.
-      # TODO: Add Swift package tests when Package.swift exists.
-      # TODO: Add full plugin manifest validation when the validator exists.
+  pre-commit:
+    name: Pre-commit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install pre-commit
+        run: python -m pip install pre-commit
+
+      - name: Install Gitleaks
+        env:
+          GITLEAKS_VERSION: 8.28.0
+        run: |
+          mkdir -p /tmp/gitleaks
+          curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
+            -o /tmp/gitleaks/gitleaks.tar.gz
+          tar -xzf /tmp/gitleaks/gitleaks.tar.gz -C /tmp/gitleaks gitleaks
+          sudo install -m 755 /tmp/gitleaks/gitleaks /usr/local/bin/gitleaks
+
+      - name: Run hooks
+        run: pre-commit run --all-files
+
+  docker-check:
+    name: Docker check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Docker scaffold check
+        run: sh scripts/docker-check.sh
+
+  workflow-release-syntax:
+    name: Workflow and release syntax
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Validate workflows
+        run: npm run workflow:check

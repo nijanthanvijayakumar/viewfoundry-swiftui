@@ -11,13 +11,16 @@
     "check": "npm run typecheck && npm run build && npm test && npm run sandbox:build",
     "diff:image": "npm run build --workspace @viewfoundry/runtime && node packages/runtime/dist/src/diff-cli.js",
     "mockup:stub": "npm run build --workspace @viewfoundry/runtime && node packages/runtime/dist/src/mockup-cli.js",
+    "pack:dry-run": "npm pack --workspace @viewfoundry/runtime --dry-run --cache .cache/npm",
     "pipeline:mock": "npm run build --workspace @viewfoundry/runtime && node packages/runtime/dist/src/pipeline-cli.js",
     "sandbox:build": "sh scripts/build-sandbox.sh",
     "sandbox:screenshot": "sh scripts/capture-sandbox-screenshot.sh",
     "secrets": "sh scripts/gitleaks-check.sh",
+    "smoke:cli": "npm run build --workspace @viewfoundry/runtime && node scripts/cli-smoke.mjs",
     "test": "npm run test:unit",
     "test:unit": "npm run test:unit --workspace @viewfoundry/runtime",
-    "typecheck": "npm run typecheck --workspace @viewfoundry/runtime"
+    "typecheck": "npm run typecheck --workspace @viewfoundry/runtime",
+    "workflow:check": "sh scripts/validate-workflows.sh"
   },
   "devDependencies": {
     "@types/node": "^22.19.21",

@@ -117,6 +117,7 @@ Current container behavior:
   and SwiftUI sandbox template.
 - Installs npm dependencies.
 - Runs `npm run check`.
+- Runs CLI smoke and package dry-run checks when npm scripts exist.
 
 Docker does not run Xcode, SwiftUI sandbox, or iOS Simulator checks. Run those
 on a macOS host with Xcode installed when the Swift/iOS targets exist.
@@ -299,6 +300,19 @@ pre-commit install
 ```
 
 CI and pre-commit both run Gitleaks.
+
+## CI Coverage
+
+CI runs on pull requests, pushes to `main`, and manual reruns. Pull request
+concurrency cancels stale runs.
+
+Automatic CI runs repo contract checks, `npm ci`, `npm run typecheck`,
+`npm test`, `npm run build`, `npm run check`, CLI smoke, package dry-run,
+Gitleaks, pre-commit, Docker checks, and workflow/release syntax checks.
+
+Manual gates remain PR diff Gitleaks scanning before merge, release publishing
+verification, and simulator screenshot or Swift sandbox tests that need macOS
+runner policy.
 
 ## Project Links
 
